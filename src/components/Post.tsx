@@ -1,6 +1,6 @@
 import EngagementActions from './EngagementActions';
 import EngagementStats from './EngagementStats';
-import ImageDisplay from './ImageDisplay';
+import ImageGrid from './ImageGrid';
 import PostHeader from './PostHeader';
 import TextExpander from './TextExpander';
 
@@ -12,7 +12,7 @@ export default function Post() {
         className='text-sm text-foreground px-4'
         text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur voluptas repellendus necessitatibus, reprehenderit inventore sit autem aliquid rerum cumque dolor quisquam, architecto assumenda amet fugit aut similique quas beatae natus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur voluptas repellendus necessitatibus, reprehenderit inventore sit autem aliquid rerum cumque dolor quisquam, architecto assumenda amet fugit aut similique quas beatae natus.'
       />
-      <ImageDisplay />
+      <ImageGrid images={['/d.jpg', '/c.jpg']} />
       <EngagementStats />
       <div className='border rounded-lg border-gray-300'></div>
       <EngagementActions />

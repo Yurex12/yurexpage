@@ -1,22 +1,17 @@
-'use client';
-import { useEffect, useRef } from 'react';
+type ImageGridProps = {
+  images: string[];
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+};
 
-const images: string[] = ['/d.jpg', '/c.jpg'];
-
-export default function ImageDisplay() {
-  const imageRef = useRef<HTMLImageElement | null>(null);
+export default function ImageGrid({ images, containerRef }: ImageGridProps) {
   const imageLength = images.length;
-
-  // useEffect(() => {
-  //   imageRef.current?.scrollIntoView({ block: 'start' });
-  // }, []);
 
   return (
     <div
       className={`w-full mx-auto grid grid-cols-1 mt-2  ${
         imageLength > 1 ? 'grid-cols-2 gap-x-0.5' : ''
       }`}
-      ref={imageRef}
+      ref={containerRef}
     >
       {images.map((image) => (
         <img

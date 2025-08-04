@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { MessageCircle } from 'lucide-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
@@ -9,10 +9,10 @@ import CommentDialogHeader from './CommentDialogHeader';
 import CommentList from './CommentList';
 import ConfirmAction from './ConfirmAction';
 import EngagementStats from './EngagementStats';
-import ImageDisplay from './ImageDisplay';
 import PostHeader from './PostHeader';
 import PostInteractions from './PostInteractions';
 import TextExpander from './TextExpander';
+import ImageGrid from './ImageGrid';
 
 type PostCommentSectionProps = {
   openConfirmationDialog: boolean;
@@ -29,8 +29,14 @@ export default function PostCommentSection({
   handleLeavePost,
   handleConfirmationDialog,
 }: PostCommentSectionProps) {
+  const images: string[] = ['/d.jpg', '/c.jpg'];
+  const imageRef = useRef<HTMLDivElement>(null);
   const commentBoxRef = useRef<HTMLTextAreaElement | null>(null);
   const handleComment = () => commentBoxRef.current?.focus();
+
+  useEffect(() => {
+    imageRef.current?.scrollIntoView({ block: 'start' });
+  }, []);
 
   return (
     <>
@@ -49,7 +55,8 @@ export default function PostCommentSection({
           className='text-sm px-4 mt-2'
           text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.'
         />
-        <ImageDisplay />
+        {/* image */}
+        <ImageGrid images={images} containerRef={imageRef} />
         <div className='space-y-2 mt-2'>
           <EngagementStats />
           <PostInteractions className='border-y border-gray-400 py-1'>
