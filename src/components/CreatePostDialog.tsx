@@ -1,7 +1,7 @@
 'use client';
+import { ChangeEvent, useEffect, useRef } from 'react';
 
 import { Image, Plus, Send, X } from 'lucide-react';
-import { ChangeEvent, useEffect, useRef } from 'react';
 
 import { DialogClose } from './ui/dialog';
 import { CreatePostDialogProps } from '@/types/types';

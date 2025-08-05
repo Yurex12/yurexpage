@@ -7,9 +7,9 @@ function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='h-full pt-18'>
+    <div className='h-full mx-auto'>
       <Header />
-      <div className='max-w-[1600px] mx-auto grid grid-cols-[16rem_1fr] w-full h-full'>
+      <div className='mx-auto grid lg:grid-cols-[16rem_1fr] w-full h-full pt-18 max-w-[1600px]'>
         <SideBar />
         <main className='bg-gray-50 h-full overflow-y-scroll scrollbar-hide'>
           {children}

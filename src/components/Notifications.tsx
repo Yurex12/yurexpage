@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 import NotificationOptions from './NotificationOptions';
+import { ComponentPropsWithoutRef } from 'react';
+import { cn } from '@/lib/utils';
 
 const notifications = [
   {
@@ -123,10 +125,11 @@ const notifications = [
     unread: false,
   },
 ];
+type NotificationsProps = ComponentPropsWithoutRef<'div'>;
 
-export default function Notifications() {
+export default function Notifications({ className }: NotificationsProps) {
   return (
-    <div className='py-4 h-full overflow-y-scroll scrollbar-hide'>
+    <div className={cn('h-full overflow-y-scroll scrollbar-hide', className)}>
       <OverlayScrollbarsComponent
         options={{
           scrollbars: {

@@ -31,7 +31,7 @@ export function PostProvider({ children }: { children: ReactNode }) {
   const [openPostDialog, setOpenPostDialog] = useState(false);
   function handlePostDialog() {}
   return (
-    <postContext.Provider value={{ openPostDialog }}>
+    <postContext.Provider value={{ openPostDialog, }}>
       {children}
     </postContext.Provider>
   );

@@ -9,7 +9,7 @@ export function SideBar() {
   const pathname = usePathname();
 
   return (
-    <aside className='px-10 py-6'>
+    <aside className='px-10 py-6 hidden lg:block'>
       <ul className='flex flex-col space-y-5'>
         {links.map((link) => (
           <Link
