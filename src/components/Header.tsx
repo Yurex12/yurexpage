@@ -36,8 +36,11 @@ export function Header() {
       </header>
 
       <Dialog open={showNotification} onOpenChange={handleShowNotification}>
-        <DialogContent showCloseButton={false} className='w-md h-[88%]'>
-          <DialogOverlay className='bg-transparent/0' />
+        <DialogContent
+          showCloseButton={false}
+          showOverlay={false}
+          className='w-md h-[90%] p-0 top-[48%] right-0 shadow-2xl border border-red-500'
+        >
           <Notifications />
         </DialogContent>
       </Dialog>

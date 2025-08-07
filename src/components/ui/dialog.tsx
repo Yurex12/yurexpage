@@ -32,14 +32,18 @@ function DialogClose({
 
 function DialogOverlay({
   className,
+  showOverlay,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+}: React.ComponentProps<typeof DialogPrimitive.Overlay> & {
+  showOverlay: boolean;
+}) {
   return (
     <DialogPrimitive.Overlay
       data-slot='dialog-overlay'
       className={cn(
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
-        className
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50',
+        className,
+        { 'bg-black/50': showOverlay }
       )}
       {...props}
     />
@@ -49,14 +53,16 @@ function DialogOverlay({
 function DialogContent({
   className,
   children,
+  showOverlay = true,
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
+  showOverlay?: boolean;
 }) {
   return (
     <DialogPortal data-slot='dialog-portal'>
-      <DialogOverlay />
+      <DialogOverlay showOverlay={showOverlay} />
       <DialogPrimitive.Content
         data-slot='dialog-content'
         className={cn(
