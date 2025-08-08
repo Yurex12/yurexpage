@@ -6,3 +6,6 @@ export const links: Link[] = [
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
+
+export const MOBILE_BREAKPOINT = 600;
+export const DESKTOP_BREAKPOINT = 850;

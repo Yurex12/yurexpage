@@ -46,7 +46,7 @@ export default function CreatePost() {
 
   return (
     <>
-      <div className='flex items-center mx-auto w-140 gap-3 px-4 py-3 bg-white rounded-xl shadow-sm'>
+      <div className='flex items-center mx-auto w-auto md:w-140 gap-3 px-4 py-3  bg-white rounded-xl shadow-sm'>
         {/* Profile Picture */}
         <img
           src='/b.jpg'
@@ -55,11 +55,11 @@ export default function CreatePost() {
         />
 
         {/* Input Area */}
-        <div className='flex-1 flex items-center gap-x-2'>
+        <div className='flex-1 flex items-center gap-x-1'>
           <Dialog open={openPostDialog} onOpenChange={handlePostDialog}>
             <DialogTrigger asChild>
-              <button className='w-full resize-none bg-gray-100 px-4 py-3 text-start rounded-full text-sm text-gray-800 placeholder-gray-500 outline-none pr-8 hover:cursor-pointer'>
-                What&apos;s on your mind, Adeyemi?
+              <button className='w-full resize-none bg-gray-100 px-4 py-2 text-start rounded-full text-gray-600 placeholder-gray-500 outline-none hover:cursor-pointer'>
+                What&apos;s on your mind, Ade?
               </button>
             </DialogTrigger>
             <DialogContent

@@ -4,12 +4,7 @@ import { useState } from 'react';
 import { Logo } from './Logo';
 import Notifications from './Notifications';
 import { UserAvatar } from './UserAvatar';
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogOverlay,
-} from './ui/dialog';
+import { Dialog, DialogContent } from './ui/dialog';
 
 export function Header() {
   const [showNotification, setShowNotification] = useState(false);
@@ -39,7 +34,7 @@ export function Header() {
         <DialogContent
           showCloseButton={false}
           showOverlay={false}
-          className='w-md h-[90%] p-0 top-[48%] right-0 shadow-2xl border border-red-500'
+          className='w-md h-[90%] p-0 top-[9%] right-[4%] left-auto shadow-2xl border-0 translate-x-[-0] translate-y-[-0]'
         >
           <Notifications />
         </DialogContent>

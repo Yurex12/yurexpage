@@ -3,7 +3,7 @@
 
 @theme {
   --breakpoint-sm: 480px;
-  --breakpoint-md: 768px;
+  --breakpoint-md: 600px;
   --breakpoint-lg: 850px;
   --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1300px;
@@ -151,9 +151,9 @@
   --sidebar-ring: oklch(0.488 0.243 264.376);
 }
 
-body {
-  @apply break-words font-medium text-gray-600;
-}
+/* body {
+  @apply break-words text-gray-900 text-xs md:text-sm;
+} */
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;

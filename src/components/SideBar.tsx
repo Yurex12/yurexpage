@@ -10,7 +10,7 @@ export function SideBar() {
 
   return (
     <aside className='px-10 py-6 hidden lg:block'>
-      <ul className='flex flex-col space-y-5'>
+      <ul className='flex flex-col space-y-5 text-base'>
         {links.map((link) => (
           <Link
             key={link.name}

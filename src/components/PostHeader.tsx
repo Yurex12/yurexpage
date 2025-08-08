@@ -7,10 +7,10 @@ export default function PostHeader() {
         <img
           src='/c.jpg'
           alt='Profile'
-          className='w-12 h-12 rounded-full object-cover'
+          className='size-12 rounded-full object-cover'
         />
         <div className='flex flex-col'>
-          <p className='text-sm font-medium text-foreground'>John Doe</p>
+          <p className='font-medium text-gray-800'>John Doe</p>
           <p className='text-xs text-muted-foreground'>@johndoe</p>
         </div>
       </div>

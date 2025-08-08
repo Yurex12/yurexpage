@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 
+import { DESKTOP_BREAKPOINT } from '@/constants';
+
 export default function TextExpander({
   text,
   className,
@@ -16,8 +18,17 @@ export default function TextExpander({
   const wordLimit = 30;
   const isLong = words.length > wordLimit;
 
+  function handleClick() {
+    if (window.innerWidth <= DESKTOP_BREAKPOINT) {
+      setShowFullText(true);
+    }
+  }
+
   return (
-    <p className={`text-gray-900 ${className}`}>
+    <p
+      className={`${className} cursor-pointer lg:cursor-auto`}
+      onClick={handleClick}
+    >
       {isLong
         ? showFullText
           ? text
@@ -26,9 +37,9 @@ export default function TextExpander({
       {isLong && (
         <span
           className='text-blue-400 underline cursor-pointer italic ml-1'
-          onClick={() => setShowFullText(!showFullText)}
+          onClick={() => setShowFullText(true)}
         >
-          {showFullText ? 'show less' : 'show more'}
+          {!showFullText && 'show more'}
         </span>
       )}
     </p>

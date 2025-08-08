@@ -18,7 +18,7 @@ export default function ImageGrid({ images, containerRef }: ImageGridProps) {
           src={image}
           alt=''
           className={`object-cover rounded-sm w-full ${
-            image.length > 1 ? 'h-40' : 'h-auto'
+            image.length > 1 ? 'h-80' : 'h-auto'
           }`}
           key={image}
         />
