@@ -5,6 +5,7 @@ import { Logo } from './Logo';
 import Notifications from './Notifications';
 import { UserAvatar } from './UserAvatar';
 import { Dialog, DialogContent } from './ui/dialog';
+import MobileNavbar from './MobileNavbar';
 
 export function Header() {
   const [showNotification, setShowNotification] = useState(false);
@@ -22,10 +23,9 @@ export function Header() {
                 showNotification ? 'text-blue-500' : ''
               }`}
             />
-
             <UserAvatar />
-            {/* <span>Yurex</span> */}
-            <Menu />
+            {/* <Menu className='lg:hidden' onClick={}/> */}
+            <MobileNavbar />
           </div>
         </div>
       </header>
