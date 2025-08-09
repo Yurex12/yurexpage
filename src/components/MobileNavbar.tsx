@@ -28,7 +28,7 @@ export default function MobileNavbar() {
       </SheetTrigger>
       <SheetContent
         showCloseButton={false}
-        className='space-y-2 p-0 gap-0 pt-2 px-2'
+        className='space-y-2 p-0 gap-0 pt-2 px-2 w-7/12'
       >
         {/* close button */}
         <div className='flex justify-end'>

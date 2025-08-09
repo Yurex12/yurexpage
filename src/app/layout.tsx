@@ -1,10 +1,15 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Outfit } from 'next/font/google';
 import 'overlayscrollbars/overlayscrollbars.css';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 // export const playfair = Playfair_Display({ subsets: ['latin'] });
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${inter.className} text-sm antialiased h-dvh break-words text-gray-600`}
+        className={`${outfit.className} text-sm md:text-base  antialiased h-dvh break-words text-gray-600`}
       >
         {children}
       </body>

@@ -1,33 +1,24 @@
-import React from 'react';
+'use client';
+import { useState } from 'react';
+import Lightbox from 'yet-another-react-lightbox';
+import 'yet-another-react-lightbox/styles.css';
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Ellipsis } from 'lucide-react';
+export default function App() {
+  const [open, setOpen] = useState(false);
 
-function Page() {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <div className='bg-gray-0 hover:bg-gray-100 transition-all px-2 py-1 rounded-full'>
-          <Ellipsis />
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <button type='button' onClick={() => setOpen(true)}>
+        Open Lightbox
+      </button>
+
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={[{ src: '/c.jpg' }, { src: '/d.jpg' }, { src: '/yusuf.jpg' }]}
+        className='bg-red-500'
+        controller={{ closeOnBackdropClick: true, closeOnPullDown: true }}
+      />
+    </>
   );
 }
-
-export default Page;

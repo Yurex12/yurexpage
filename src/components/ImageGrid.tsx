@@ -1,9 +1,14 @@
 type ImageGridProps = {
-  images: string[];
+  images: { src: string }[];
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  handleOpenPhoto?: (index: number) => void;
 };
 
-export default function ImageGrid({ images, containerRef }: ImageGridProps) {
+export default function ImageGrid({
+  images,
+  containerRef,
+  handleOpenPhoto,
+}: ImageGridProps) {
   const imageLength = images.length;
 
   return (
@@ -13,14 +18,15 @@ export default function ImageGrid({ images, containerRef }: ImageGridProps) {
       }`}
       ref={containerRef}
     >
-      {images.map((image) => (
+      {images.map((image, i) => (
         <img
-          src={image}
+          src={image.src}
           alt=''
           className={`object-cover rounded-sm w-full ${
-            image.length > 1 ? 'h-80' : 'h-auto'
+            images.length > 1 ? 'h-80' : 'h-auto'
           }`}
-          key={image}
+          key={image.src}
+          onClick={() => handleOpenPhoto?.(i)}
         />
       ))}
     </div>
