@@ -29,7 +29,7 @@ export default function PostCommentSection({
   handleLeavePost,
   handleConfirmationDialog,
 }: PostCommentSectionProps) {
-  const images: string[] = ['/d.jpg', '/c.jpg'];
+  const slides: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
   const imageContainerRef = useRef<HTMLDivElement | null>(null);
   const commentBoxRef = useRef<HTMLTextAreaElement | null>(null);
   const handleComment = () => commentBoxRef.current?.focus();
@@ -56,7 +56,7 @@ export default function PostCommentSection({
           text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.'
         />
         {/* image */}
-        <ImageGrid images={images} containerRef={imageContainerRef} />
+        <ImageGrid images={slides} containerRef={imageContainerRef} />
         <div className='space-y-2 mt-2'>
           <EngagementStats />
           <PostInteractions className='border-y border-gray-400 py-1'>
