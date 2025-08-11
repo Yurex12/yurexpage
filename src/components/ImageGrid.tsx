@@ -33,7 +33,10 @@ export default function ImageGrid({ images, containerRef }: ImageGridProps) {
               images.length > 1 ? 'h-80' : 'h-auto'
             }`}
             key={image.src}
-            onClick={() => handleOpen(i)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpen(i);
+            }}
           />
         ))}
       </div>

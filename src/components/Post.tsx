@@ -6,9 +6,9 @@ import ImageGrid from './ImageGrid';
 import PostHeader from './PostHeader';
 import TextExpander from './TextExpander';
 
-export default function Post() {
-  const slides: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
+const slides: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
 
+export default function Post() {
   return (
     <div className='bg-white rounded-lg shadow max-w-140 pt-4 pb-2 mx-auto space-y-2 sm:space-y-3'>
       <PostHeader />
