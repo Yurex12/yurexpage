@@ -1,13 +1,13 @@
+'use client';
 import { useState } from 'react';
 import 'yet-another-react-lightbox/styles.css';
 import Lightbox from 'yet-another-react-lightbox';
 
 type ImageGridProps = {
   images: { src: string }[];
-  containerRef?: React.RefObject<HTMLDivElement | null>;
 };
 
-export default function ImageGrid({ images, containerRef }: ImageGridProps) {
+export default function PostImage({ images }: ImageGridProps) {
   const imageLength = images.length;
 
   const [open, setOpen] = useState(false);
@@ -23,7 +23,6 @@ export default function ImageGrid({ images, containerRef }: ImageGridProps) {
         className={`w-full mx-auto grid grid-cols-1 mt-2  ${
           imageLength > 1 ? 'grid-cols-2 gap-x-0.5' : ''
         }`}
-        ref={containerRef}
       >
         {images.map((image, i) => (
           <img
@@ -47,6 +46,11 @@ export default function ImageGrid({ images, containerRef }: ImageGridProps) {
         slides={images}
         index={photoIndex}
         controller={{ closeOnBackdropClick: true, closeOnPullDown: true }}
+        styles={{
+          container: {
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          },
+        }}
       />
     </>
   );

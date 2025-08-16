@@ -2,11 +2,11 @@
 
 import EngagementActions from './EngagementActions';
 import EngagementStats from './EngagementStats';
-import ImageGrid from './ImageGrid';
 import PostHeader from './PostHeader';
+import PostImage from './PostImage';
 import TextExpander from './TextExpander';
 
-const slides: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
+const images: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
 
 export default function Post() {
   return (
@@ -16,7 +16,7 @@ export default function Post() {
         className='px-4'
         text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur voluptas repellendus necessitatibus, reprehenderit inventore sit autem aliquid rerum cumque dolor quisquam, architecto assumenda amet fugit aut similique quas beatae natus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur voluptas repellendus necessitatibus, reprehenderit inventore sit autem aliquid rerum cumque dolor quisquam, architecto assumenda amet fugit aut similique quas beatae natus.'
       />
-      <ImageGrid images={slides} />
+      <PostImage images={images} />
       <EngagementStats />
       <div className='border rounded-lg border-gray-300'></div>
       <EngagementActions />

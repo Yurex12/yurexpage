@@ -12,7 +12,8 @@ import EngagementStats from './EngagementStats';
 import PostHeader from './PostHeader';
 import PostInteractions from './PostInteractions';
 import TextExpander from './TextExpander';
-import ImageGrid from './ImageGrid';
+import ImageGrid from './PostImage';
+import CommentImage from './CommentImage';
 
 type PostCommentSectionProps = {
   openConfirmationDialog: boolean;
@@ -29,14 +30,10 @@ export default function PostCommentSection({
   handleLeavePost,
   handleConfirmationDialog,
 }: PostCommentSectionProps) {
-  const slides: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
-  const imageContainerRef = useRef<HTMLDivElement | null>(null);
+  const slides: { src: string }[] = [{ src: '/yusuf.jpg' }, { src: '/c.jpg' }];
+
   const commentBoxRef = useRef<HTMLTextAreaElement | null>(null);
   const handleComment = () => commentBoxRef.current?.focus();
-
-  useEffect(() => {
-    imageContainerRef.current?.scrollIntoView({ block: 'start' });
-  }, []);
 
   return (
     <>
@@ -56,7 +53,7 @@ export default function PostCommentSection({
           text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.'
         />
         {/* image */}
-        <ImageGrid images={slides} containerRef={imageContainerRef} />
+        <CommentImage images={slides} />
         <div className='space-y-2 mt-2'>
           <EngagementStats />
           <PostInteractions className='border-y border-gray-400 py-1'>

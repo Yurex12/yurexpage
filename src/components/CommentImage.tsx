@@ -7,14 +7,17 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useEffect, useRef, useState } from 'react';
 
-const images = ['/b.jpg', '/d.jpg', '/yusuf.jpg'];
-
-export default function Page() {
+export default function CommentImage({
+  images,
+}: {
+  images: { src: string }[];
+}) {
   const [open, setOpen] = useState(false);
   const [startIndex, setStartIndex] = useState(1);
+  const ref = useRef<HTMLDivElement | null>(null);
   const handleOpen = () => setOpen((open) => !open);
 
   function handleOpenImage(index: number) {
@@ -22,30 +25,31 @@ export default function Page() {
     setOpen(true);
   }
 
+  useEffect(() => {
+    ref.current?.scrollIntoView({ block: 'start' });
+  }, []);
+
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <div className='flex gap-5 mt-20'>
-        <img
-          src={images[0]}
-          alt=''
-          className='size-20'
-          onClick={() => handleOpenImage(0)}
-        />
-        <img
-          src={images[1]}
-          alt=''
-          className='size-20'
-          onClick={() => handleOpenImage(1)}
-        />
-        <img
-          src={images[2]}
-          alt=''
-          className='size-20'
-          onClick={() => handleOpenImage(2)}
-        />
+      <div
+        className={`w-full mx-auto grid grid-cols-1 mt-2  ${
+          images.length > 1 ? 'grid-cols-2 gap-x-0.5' : ''
+        }`}
+        ref={ref}
+      >
+        {images.map((image, index) => (
+          <img
+            src={image.src}
+            alt=''
+            className={`object-cover rounded-sm w-full ${
+              images.length > 1 ? 'h-80' : 'h-auto'
+            }`}
+            key={image.src}
+            onClick={() => handleOpenImage(index)}
+          />
+        ))}
       </div>
-      <DialogTrigger className='mt-40'>open</DialogTrigger>
-      <DialogContent className='sm:max-w-2xl w-[90vw] p-0 border-0 bg-transparent shadow-2xl'>
+      <DialogContent className='sm:max-w-11/12 h-11/12 p-0 border-0 bg-transparent shadow-2xl'>
         <div className='relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-2xl overflow-hidden border border-slate-700/50 backdrop-blur-sm'>
           {/* Header with subtle gradient */}
           <div className='absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/20 to-transparent z-10 pointer-events-none' />
@@ -71,7 +75,7 @@ export default function Page() {
                     />
 
                     <img
-                      src={image}
+                      src={image.src}
                       alt={`Image ${index + 1}`}
                       className='h-full w-auto object-contain drop-shadow-2xl'
                     />
