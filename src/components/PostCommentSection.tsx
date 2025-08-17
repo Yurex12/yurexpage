@@ -1,19 +1,18 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import { MessageCircle } from 'lucide-react';
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react';
 
 import CommentBox from './CommentBox';
 import CommentDialogHeader from './CommentDialogHeader';
+import CommentImage from './CommentImage';
 import CommentList from './CommentList';
 import ConfirmAction from './ConfirmAction';
 import EngagementStats from './EngagementStats';
 import PostHeader from './PostHeader';
 import PostInteractions from './PostInteractions';
 import TextExpander from './TextExpander';
-import ImageGrid from './PostImage';
-import CommentImage from './CommentImage';
 
 type PostCommentSectionProps = {
   openConfirmationDialog: boolean;

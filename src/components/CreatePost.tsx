@@ -3,11 +3,13 @@ import { useState } from 'react';
 
 import { ImageIcon } from 'lucide-react';
 
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 import ConfirmAction from './ConfirmAction';
 import CreatePostDialog from './CreatePostDialog';
+import { Dialog, DialogContent, DialogTitle } from './ui/dialog';
 
+import { MOBILE_DEVICE_BREAKPOINT } from '@/constants';
 import { Image } from '@/types/types';
+import { useRouter } from 'next/navigation';
 
 export default function CreatePost() {
   const [openPostDialog, setOpenPostDialog] = useState(false);
@@ -15,10 +17,10 @@ export default function CreatePost() {
   const [text, setText] = useState('');
   const [images, setImages] = useState<Image[]>([]);
 
+  const router = useRouter();
+
   const handleConfirmationDialog = () =>
     setOpenConfirmationDialog((open) => !open);
-
-  // const handleCloseConfirmationDialog = () => setOpenConfirmationDialog(false);
 
   function handlePostDialog() {
     if (openPostDialog === true) {
@@ -44,6 +46,11 @@ export default function CreatePost() {
     setOpenPostDialog(true);
   }
 
+  function handleCreatePost() {
+    if (window.innerWidth > MOBILE_DEVICE_BREAKPOINT) handlePostDialog();
+    else router.push('/create-post');
+  }
+
   return (
     <>
       <div className='flex items-center mx-auto w-auto md:w-140 gap-3 px-4 py-3  bg-white rounded-xl shadow-sm'>
@@ -57,11 +64,13 @@ export default function CreatePost() {
         {/* Input Area */}
         <div className='flex-1 flex items-center gap-x-1'>
           <Dialog open={openPostDialog} onOpenChange={handlePostDialog}>
-            <DialogTrigger asChild>
-              <button className='w-full resize-none bg-gray-100 px-4 py-2 text-start rounded-full text-gray-600 placeholder-gray-500 outline-none hover:cursor-pointer'>
-                What&apos;s on your mind, Ade?
-              </button>
-            </DialogTrigger>
+            <button
+              className='w-full resize-none bg-gray-100 px-4 py-2 text-start rounded-full text-gray-600 placeholder-gray-500 outline-none hover:cursor-pointer'
+              onClick={handleCreatePost}
+            >
+              What&apos;s on your mind, Ade?
+            </button>
+
             <DialogContent
               className='flex flex-col p-4 max-h-10/12 border-0 outline-0'
               showCloseButton={false}

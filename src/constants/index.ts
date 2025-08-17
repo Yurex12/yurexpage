@@ -7,5 +7,6 @@ export const links: Link[] = [
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 
+export const MOBILE_DEVICE_BREAKPOINT = 480;
 export const MOBILE_BREAKPOINT = 600;
 export const DESKTOP_BREAKPOINT = 850;
