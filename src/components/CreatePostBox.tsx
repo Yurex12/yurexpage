@@ -14,16 +14,8 @@ export default function CreatePostBox() {
 
   useEffect(() => {
     textareaRef.current?.focus();
+    textareaRef.current!.style.height = '100%';
   }, []);
-
-  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setText(e.target.value);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + 'px';
-    }
-  };
 
   const handleSubmit = () => {
     if (text.trim() || images.length > 0) {
@@ -33,9 +25,33 @@ export default function CreatePostBox() {
     }
   };
 
-  //   function handleTextHeight() {
-  //     if (!text.trim()) textareaRef.current!.style.height = 'auto';
-  //   }
+  function handleTextAreaHeight(value: boolean) {
+    if (value) {
+      textareaRef.current!.style.height = 'auto';
+    } else {
+      textareaRef.current!.style.height = '100%';
+    }
+  }
+
+  function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value);
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    if (images.length) {
+      // Case: images exist → textarea shouldn’t resize, container handles scroll
+      textarea.style.height = 'auto';
+    } else {
+      // Case: no images → textarea autosizes to fit text
+      textarea.style.height = 'auto'; // reset first
+      const newHeight = Math.max(
+        textarea.scrollHeight,
+        textarea.parentElement!.offsetHeight // container height baseline
+      );
+      textarea.style.height = newHeight + 'px';
+    }
+  }
 
   return (
     <div className='flex flex-col gap-y-2 h-11/12 px-4 sm:px-8 mt-2'>
@@ -48,14 +64,22 @@ export default function CreatePostBox() {
           ref={textareaRef}
           onChange={handleTextChange}
           placeholder="What's on your mind?"
-          className='w-full h-full outline-none font-normal resize-none bg-transparent text-gray-900 leading-relaxed placeholder:text-gray-500 border-2'
+          className='w-full outline-none font-normal resize-none bg-transparent text-gray-900 leading-relaxed placeholder:text-gray-500'
           rows={1}
         />
         {/* Image Previews */}
-        <CreatePostImagePreviews images={images} setImages={setImages} />
+        <CreatePostImagePreviews
+          images={images}
+          setImages={setImages}
+          handleTextAreaHeight={handleTextAreaHeight}
+        />
       </div>
       {/* Image Upload Section */}
-      <ImageUploader images={images} setImages={setImages} />
+      <ImageUploader
+        images={images}
+        setImages={setImages}
+        handleTextAreaHeight={handleTextAreaHeight}
+      />
       {/* Footer */}
       <CreatePostFooter
         text={text}

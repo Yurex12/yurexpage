@@ -5,12 +5,19 @@ import { Dispatch, SetStateAction } from 'react';
 export default function CreatePostImagePreviews({
   images,
   setImages,
+  handleTextAreaHeight,
 }: {
   images: Image[];
+  handleTextAreaHeight?: (value: boolean) => void;
   setImages: Dispatch<SetStateAction<Image[]>>;
 }) {
   const removeImage = (id: number) => {
-    setImages((prev) => prev.filter((img) => img.id !== id));
+    const updated = images.filter((img) => img.id !== id);
+    setImages(updated);
+
+    if (updated.length === 0) {
+      handleTextAreaHeight?.(false); // go back to full height
+    }
   };
   return (
     <>

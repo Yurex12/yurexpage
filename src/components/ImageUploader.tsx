@@ -5,15 +5,15 @@ import { Dispatch, SetStateAction, useRef } from 'react';
 export default function ImageUploader({
   images,
   setImages,
-  handleTextHeight,
+  handleTextAreaHeight,
 }: {
   images: ImageTypes[];
-  handleTextHeight?: VoidFunction;
+  handleTextAreaHeight?: (value: boolean) => void;
   setImages: Dispatch<SetStateAction<ImageTypes[]>>;
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const handleImageUpload = (files: FileList | null) => {
-    handleTextHeight?.();
+    handleTextAreaHeight?.(true);
     if (!files) return;
     const newImages = Array.from(files).slice(0, 2 - images.length);
     newImages.forEach((file) => {
