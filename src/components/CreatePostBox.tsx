@@ -14,7 +14,7 @@ export default function CreatePostBox() {
 
   useEffect(() => {
     textareaRef.current?.focus();
-    textareaRef.current!.style.height = '100%';
+    // textareaRef.current!.style.height = '100%';
   }, []);
 
   const handleSubmit = () => {
@@ -45,7 +45,7 @@ export default function CreatePostBox() {
     } else {
       // Case: no images → textarea autosizes to fit text
       textarea.style.height = 'auto'; // reset first
-      const newHeight = Math.max(
+      const newHeight = Math.min(
         textarea.scrollHeight,
         textarea.parentElement!.offsetHeight // container height baseline
       );
@@ -64,7 +64,7 @@ export default function CreatePostBox() {
           ref={textareaRef}
           onChange={handleTextChange}
           placeholder="What's on your mind?"
-          className='w-full outline-none font-normal resize-none bg-transparent text-gray-900 leading-relaxed placeholder:text-gray-500'
+          className='w-full outline-none h-full font-normal resize-none bg-transparent text-gray-900 leading-relaxed placeholder:text-gray-500'
           rows={1}
         />
         {/* Image Previews */}
