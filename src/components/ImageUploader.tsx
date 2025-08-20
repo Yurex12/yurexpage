@@ -1,19 +1,17 @@
 import { Image as ImageTypes } from '@/types/types';
-import { Plus, Image } from 'lucide-react';
+import { Image, Plus } from 'lucide-react';
 import { Dispatch, SetStateAction, useRef } from 'react';
 
 export default function ImageUploader({
   images,
   setImages,
-  handleTextAreaHeight,
 }: {
   images: ImageTypes[];
-  handleTextAreaHeight?: (value: boolean) => void;
   setImages: Dispatch<SetStateAction<ImageTypes[]>>;
 }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const handleImageUpload = (files: FileList | null) => {
-    handleTextAreaHeight?.(true);
     if (!files) return;
     const newImages = Array.from(files).slice(0, 2 - images.length);
     newImages.forEach((file) => {
@@ -34,6 +32,7 @@ export default function ImageUploader({
       }
     });
   };
+
   return (
     <div className='flex items-center justify-between p-3 border border-gray-200 rounded-xl bg-gray-50'>
       <div className='flex items-center space-x-3'>

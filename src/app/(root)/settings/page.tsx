@@ -23,8 +23,8 @@ export default function CreatePostMobile() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const autoResizeTextarea = (e?: React.FormEvent<HTMLTextAreaElement>) => {
-    const el = e?.currentTarget || textareaRef.current;
+  const autoResizeTextarea = () => {
+    const el = textareaRef.current;
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = `${el.scrollHeight}px`;

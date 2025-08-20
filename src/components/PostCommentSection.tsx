@@ -48,7 +48,7 @@ export default function PostCommentSection({
       >
         <PostHeader />
         <TextExpander
-          className='text-sm px-4 mt-2'
+          className='px-4 mt-2'
           text='Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.'
         />
         {/* image */}

@@ -22,11 +22,9 @@ export default function CreatePostDialog({
 
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + 'px';
-    }
+    if (!textareaRef.current) return;
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
   };
 
   const handleSubmit = () => {
@@ -51,7 +49,6 @@ export default function CreatePostDialog({
 
       {/* Content: text $ images */}
       <div className='overflow-y-auto'>
-        {/* Text */}
         <textarea
           ref={textareaRef}
           value={text}
@@ -60,14 +57,11 @@ export default function CreatePostDialog({
           className='w-full border-none outline-none font-normal resize-none bg-transparent leading-relaxed placeholder:text-gray-500'
           rows={1}
         />
-        {/* Image Previews */}
         <CreatePostImagePreviews images={images} setImages={setImages} />
       </div>
 
-      {/* Image Upload Section */}
       <ImageUploader images={images} setImages={setImages} />
 
-      {/* Footer */}
       <CreatePostFooter
         text={text}
         imageLength={images.length}

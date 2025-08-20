@@ -5,25 +5,20 @@ import { Dispatch, SetStateAction } from 'react';
 export default function CreatePostImagePreviews({
   images,
   setImages,
-  handleTextAreaHeight,
 }: {
   images: Image[];
-  handleTextAreaHeight?: (value: boolean) => void;
   setImages: Dispatch<SetStateAction<Image[]>>;
 }) {
   const removeImage = (id: number) => {
     const updated = images.filter((img) => img.id !== id);
     setImages(updated);
-
-    if (updated.length === 0) {
-      handleTextAreaHeight?.(false); // go back to full height
-    }
   };
+
   return (
     <>
       {images.length > 0 && (
         <div
-          className={`w-full mx-auto grid grid-cols-1 mt-2  ${
+          className={`w-full mx-auto grid grid-cols-1 mt-1  ${
             images.length > 1 ? 'grid-cols-2 gap-x-0.5' : ''
           } `}
         >

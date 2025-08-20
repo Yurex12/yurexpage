@@ -41,7 +41,7 @@ export default function CommentImage({
           <img
             src={image.src}
             alt=''
-            className={`object-cover rounded-md w-full cursor-pointer transition-transform duration-200 hover:scale-[1.02] ${
+            className={`object-cover rounded-md w-full cursor-pointer ${
               images.length > 1 ? 'h-80' : 'h-auto'
             }`}
             key={image.src}
