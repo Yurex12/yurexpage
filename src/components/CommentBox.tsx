@@ -19,7 +19,7 @@ const CommentBox = forwardRef<
   return (
     <div className='w-full rounded-xl p-4 bg-white shadow-2xl shadow-gray-950'>
       <div className='flex items-start gap-3 relative'>
-        <img src='./c.jpg' alt='logo' className='w-10 h-10 rounded-full' />
+        <img src='/c.jpg' alt='logo' className='w-10 h-10 rounded-full' />
 
         <div className='flex-1 relative'>
           <textarea

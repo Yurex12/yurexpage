@@ -48,7 +48,7 @@ export default function PostImage({ images }: ImageGridProps) {
         controller={{ closeOnBackdropClick: true, closeOnPullDown: true }}
         styles={{
           container: {
-            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            backgroundColor: 'rgba(0, 0, 0, 0.99)',
           },
         }}
       />
