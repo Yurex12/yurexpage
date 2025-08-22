@@ -53,7 +53,7 @@ export default function CreatePost() {
 
   return (
     <>
-      <div className='flex items-center mx-auto w-auto md:w-140 gap-3 px-4 py-3  bg-white rounded-xl shadow-sm'>
+      <div className='flex items-center mx-auto w-auto md:w-140 gap-3 px-4 py-3  bg-white rounded-xl sm:shadow-sm'>
         {/* Profile Picture */}
         <img
           src='/b.jpg'

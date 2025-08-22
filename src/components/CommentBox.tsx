@@ -6,9 +6,15 @@ import { forwardRef, useEffect, useImperativeHandle } from 'react';
 
 const CommentBox = forwardRef<
   HTMLTextAreaElement,
-  { text: string; handleText: (value: string) => void }
->(({ text, handleText }, ref) => {
-  const { textareaRef, handleInput } = useAutoResizeTextarea(300);
+  {
+    text: string;
+    handleText: (value: string) => void;
+    maxTextAreaHeight?: number;
+  }
+>(({ text, handleText, maxTextAreaHeight }, ref) => {
+  const { textareaRef, handleInput } = useAutoResizeTextarea(
+    maxTextAreaHeight ?? 300
+  );
 
   useImperativeHandle(ref, () => textareaRef.current as HTMLTextAreaElement);
 

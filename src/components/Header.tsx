@@ -1,11 +1,11 @@
 'use client';
-import { BellDotIcon, Menu } from 'lucide-react';
+import { BellDotIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Logo } from './Logo';
+import MobileNavbar from './MobileNavbar';
 import Notifications from './Notifications';
 import { UserAvatar } from './UserAvatar';
 import { Dialog, DialogContent } from './ui/dialog';
-import MobileNavbar from './MobileNavbar';
 
 export function Header() {
   const [showNotification, setShowNotification] = useState(false);

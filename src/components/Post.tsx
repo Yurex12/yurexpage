@@ -10,7 +10,7 @@ const images: { src: string }[] = [{ src: '/d.jpg' }, { src: '/c.jpg' }];
 
 export default function Post() {
   return (
-    <div className='bg-white rounded-lg shadow max-w-140 pt-4 pb-2 mx-auto space-y-2 sm:space-y-3'>
+    <div className='bg-white rounded-lg sm:not-first:shadow max-w-140 pt-4 pb-2 mx-auto space-y-2 sm:space-y-3'>
       <PostHeader />
       <TextExpander
         className='px-4'
@@ -18,7 +18,7 @@ export default function Post() {
       />
       <PostImage images={images} />
       <EngagementStats />
-      <div className='border rounded-lg border-gray-300'></div>
+      <div className='border rounded-lg border-gray-300 hidden sm:block'></div>
       <EngagementActions />
     </div>
   );
