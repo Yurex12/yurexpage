@@ -1,4 +1,4 @@
-import MobilePostDetials from '@/components/MobilePostDetials';
+import MobilePostDetials from "@/components/MobilePostDetials";
 
 export default async function page({
   params,

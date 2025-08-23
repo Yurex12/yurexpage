@@ -1,26 +1,31 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle } from "lucide-react";
 
-import PostCommentSection from './PostCommentSection';
-import PostInteractions from './PostInteractions';
+import PostCommentSection from "./PostCommentSection";
+import PostInteractions from "./PostInteractions";
 
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
+import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
+import { useRouter } from "next/navigation";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 export default function EngagementActions() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [openCommentDialog, setOpenCommentDialog] = useState(false);
 
+  const router = useRouter();
+
   const handleText = (value: string) => setText(value);
+
   const handleConfirmationDialog = () =>
     setOpenConfirmationDialog((open) => !open);
 
   function handleLeavePost() {
     setOpenConfirmationDialog(false);
     setOpenCommentDialog(false);
-    setText('');
+    setText("");
   }
 
   function handleCommentDialog() {
@@ -28,7 +33,7 @@ export default function EngagementActions() {
       if (text.trim()) {
         setOpenConfirmationDialog(true);
       } else {
-        setText('');
+        setText("");
         setOpenCommentDialog(false);
       }
       return;
@@ -36,20 +41,27 @@ export default function EngagementActions() {
     setOpenCommentDialog(true);
   }
 
+  function handleComment() {
+    if (window.innerWidth >= MOBILE_DEVICE_BREAKPOINT)
+      setOpenCommentDialog(true);
+    else router.push("/post/1");
+  }
+
   return (
-    <div className='px-4 space-y-2'>
+    <div className="space-y-2 px-4">
       {/* Actions */}
       <PostInteractions>
         <Dialog open={openCommentDialog} onOpenChange={handleCommentDialog}>
-          <DialogTrigger asChild>
-            <button className='w-1/2 py-2 flex items-center justify-center space-x-2 text-muted-foreground rounded-md hover:bg-gray-100'>
-              <MessageCircle className='size-5' />
-              <span className='text-sm'>Comment</span>
-            </button>
-          </DialogTrigger>
+          <button
+            className="text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100"
+            onClick={handleComment}
+          >
+            <MessageCircle className="size-5" />
+            <span className="text-sm">Comment</span>
+          </button>
 
           <DialogContent
-            className='2xl:max-w-2xl w-full p-0 h-11/12 gap-y-0 flex flex-col'
+            className="flex h-11/12 w-full flex-col gap-y-0 p-0 2xl:max-w-2xl"
             showCloseButton={false}
           >
             <PostCommentSection
