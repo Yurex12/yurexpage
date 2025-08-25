@@ -1,10 +1,7 @@
-"use client";
-
-import { cn } from "@/lib/utils";
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { ComponentPropsWithoutRef } from "react";
-import NotificationOptions from "./NotificationOptions";
+import React from "react";
+import BackButton from "./BackButton";
 import NotificationsDropdown from "./NotificationsDropdown";
+import NotificationOptions from "./NotificationOptions";
 import NotificationsList from "./NotificationsList";
 
 const notifications = [
@@ -117,31 +114,21 @@ const notifications = [
     unread: false,
   },
 ];
-type NotificationsProps = ComponentPropsWithoutRef<"div">;
 
-export default function Notifications({ className }: NotificationsProps) {
+export default function MobileNotification() {
   return (
-    <div className={cn("scrollbar-hide h-full overflow-y-scroll", className)}>
-      <OverlayScrollbarsComponent
-        options={{
-          scrollbars: {
-            autoHide: "leave",
-            autoHideDelay: 500,
-          },
-        }}
-        className="mx-auto flex h-full w-full max-w-md flex-col overflow-y-scroll rounded-xl bg-white p-5 shadow"
-      >
-        <div className="flex items-center justify-between">
-          <h2 className="text-foreground text-xl font-semibold">
-            Notifications
-          </h2>
-          <NotificationsDropdown />
+    <div className="auto ms:border mx-auto flex h-full flex-col rounded-sm border border-gray-200 sm:max-w-120">
+      <div className="flex items-center justify-between border border-gray-200 px-2 py-2">
+        <div className="flex items-center gap-x-4">
+          <BackButton />
+          <h2 className="text-base">Notifications</h2>
         </div>
-
+        <NotificationsDropdown />
+      </div>
+      <div className="flex-1 overflow-y-scroll px-2 pt-4">
         <NotificationOptions />
-
         <NotificationsList notifications={notifications} />
-      </OverlayScrollbarsComponent>
+      </div>
     </div>
   );
 }

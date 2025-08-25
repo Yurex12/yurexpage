@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import useAutoResizeTextarea from '@/hooks/useAutoResizeTextarea';
-import { SendHorizonalIcon } from 'lucide-react';
-import { forwardRef, useEffect, useImperativeHandle } from 'react';
+import useAutoResizeTextarea from "@/hooks/useAutoResizeTextarea";
+import { SendHorizonalIcon } from "lucide-react";
+import { forwardRef, useEffect, useImperativeHandle } from "react";
 
 const CommentBox = forwardRef<
   HTMLTextAreaElement,
@@ -13,7 +13,7 @@ const CommentBox = forwardRef<
   }
 >(({ text, handleText, maxTextAreaHeight }, ref) => {
   const { textareaRef, handleInput } = useAutoResizeTextarea(
-    maxTextAreaHeight ?? 300
+    maxTextAreaHeight ?? 300,
   );
 
   useImperativeHandle(ref, () => textareaRef.current as HTMLTextAreaElement);
@@ -23,11 +23,11 @@ const CommentBox = forwardRef<
   });
 
   return (
-    <div className='w-full rounded-xl p-4 bg-white shadow-2xl shadow-gray-950'>
-      <div className='flex items-start gap-3 relative'>
-        <img src='/c.jpg' alt='logo' className='w-10 h-10 rounded-full' />
+    <div className="w-full rounded-xl bg-white p-4">
+      <div className="relative flex items-start gap-3">
+        <img src="/c.jpg" alt="logo" className="h-10 w-10 rounded-full" />
 
-        <div className='flex-1 relative'>
+        <div className="relative flex-1">
           <textarea
             ref={textareaRef}
             value={text}
@@ -35,16 +35,16 @@ const CommentBox = forwardRef<
               handleText(e.target.value);
               handleInput();
             }}
-            placeholder='Write a comment...'
-            className='w-full bg-gray-100 rounded-lg p-3 pr-10 text-sm resize-none focus:outline-none'
+            placeholder="Write a comment..."
+            className="w-full resize-none rounded-lg bg-gray-100 p-3 pr-10 text-sm focus:outline-none"
           />
 
           {/* Send Button inside the box */}
           <button
-            type='button'
-            className='absolute bottom-4 right-5 text-blue-600 hover:text-blue-700 transition'
+            type="button"
+            className="absolute right-5 bottom-4 text-blue-600 transition hover:text-blue-700"
           >
-            <SendHorizonalIcon className='w-5 h-5' />
+            <SendHorizonalIcon className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -52,6 +52,6 @@ const CommentBox = forwardRef<
   );
 });
 
-CommentBox.displayName = 'CommentBox';
+CommentBox.displayName = "CommentBox";
 
 export default CommentBox;

@@ -1,27 +1,29 @@
-import { useState } from 'react';
-import { Button } from './ui/button';
+"use client";
+
+import { useState } from "react";
+import { Button } from "./ui/button";
 
 export default function NotificationOptions() {
-  const [notifactionType, setNotificationType] = useState<'all' | 'unread'>(
-    'all'
+  const [notifactionType, setNotificationType] = useState<"all" | "unread">(
+    "all",
   );
   return (
-    <div className='space-x-3 mt-2'>
+    <div className="space-x-3 p-0">
       <Button
-        variant={notifactionType === 'all' ? 'outline' : 'ghost'}
+        variant={notifactionType === "all" ? "outline" : "ghost"}
         className={` ${
-          notifactionType === 'all' ? 'text-primary' : ''
-        } border-0 rounded-xl`}
-        onClick={() => setNotificationType('all')}
+          notifactionType === "all" ? "text-primary" : ""
+        } rounded-xl border-0`}
+        onClick={() => setNotificationType("all")}
       >
         All
       </Button>
       <Button
-        variant={notifactionType === 'unread' ? 'outline' : 'ghost'}
+        variant={notifactionType === "unread" ? "outline" : "ghost"}
         className={`${
-          notifactionType === 'unread' ? 'text-primary' : ''
-        } border-0 rounded-xl`}
-        onClick={() => setNotificationType('unread')}
+          notifactionType === "unread" ? "text-primary" : ""
+        } rounded-xl border-0`}
+        onClick={() => setNotificationType("unread")}
       >
         Unread
       </Button>
