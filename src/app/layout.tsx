@@ -3,7 +3,7 @@ import { Outfit } from "next/font/google";
 
 import "overlayscrollbars/overlayscrollbars.css";
 import "./globals.css";
-import Providers from "@/hooks/providers";
+import Providers from "@/contexts/providers";
 
 const outfit = Outfit({
   subsets: ["latin"],
