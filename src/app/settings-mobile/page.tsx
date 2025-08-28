@@ -1,5 +1,6 @@
-// app/settings/page.tsx
 "use client";
+
+import BackButton from "@/components/BackButton";
 
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
@@ -9,11 +10,26 @@ import { useState } from "react";
 
 const tabs = ["Account", "Security", "Preferences"];
 
-export default function SettingsPage() {
+export default function page() {
+  return (
+    <div className="auto ms:border mx-auto flex h-full flex-col rounded-sm sm:max-w-160 sm:border sm:border-gray-200">
+      {/* Header */}
+      <div className="flex w-full items-center gap-x-3 border-b border-b-gray-200 bg-white px-2 py-2">
+        <BackButton />
+        <span className="text-base">Settings</span>
+      </div>
+
+      {/* Body */}
+      <SettingsPage />
+    </div>
+  );
+}
+
+export function SettingsPage() {
   const [activeTab, setActiveTab] = useState("Account");
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 p-8 sm:space-y-10">
+    <div className="space-y-6 p-8 sm:space-y-10">
       {/* Top Tabs */}
       <div className="flex items-center justify-between gap-x-4 rounded-md border border-gray-200 p-2">
         {tabs.map((tab) => (
