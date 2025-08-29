@@ -1,9 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, Calendar, MapPin } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  Edit,
+  Edit2,
+  Image,
+  MapPin,
+  MoveLeft,
+} from "lucide-react";
 import Posts from "@/components/Posts";
-import Post from "@/components/Post";
+import { Button } from "@/components/ui/button";
 
 interface Post {
   id: number;
@@ -45,111 +53,133 @@ const ProfilePage: React.FC = () => {
       retweets: 34,
       likes: 245,
     },
+    {
+      id: 4,
+      content:
+        "Working on a new React component library. The goal is to make development faster and more enjoyable for everyone. What features would you love to see?",
+      time: "2d",
+      replies: 156,
+      retweets: 67,
+      likes: 342,
+    },
+    {
+      id: 5,
+      content:
+        "Debugging is like being a detective in a crime movie where you are also the murderer. 🕵️‍♂️💻",
+      time: "3d",
+      replies: 78,
+      retweets: 145,
+      likes: 523,
+    },
   ];
 
   return (
-    <div className="mx-auto min-h-screen max-w-3xl">
-      <div className="mx-auto border border-gray-200">
-        {/* Header */}
-        <div className="sticky top-0 z-50 border-b border-gray-800 px-4 py-3 text-black backdrop-blur-md">
-          <div className="flex items-center space-x-8">
-            <ArrowLeft className="h-5 h-8 w-5 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-900" />
-            <div>
-              <h1 className="text-xl font-bold">Alex Johnson</h1>
-              <p className="text-sm text-gray-500">1,247 posts</p>
+    <div className="flex h-full flex-col space-y-2 px-10 pt-4">
+      {/* Header */}
+
+      <div className="flex items-center space-x-6 rounded-md border border-gray-200 bg-white px-4 py-4">
+        <MoveLeft className="size-10 cursor-pointer rounded-full p-1 hover:bg-gray-100" />
+        <div>
+          <h1 className="text-xl font-bold text-gray-800">Alex Johnson</h1>
+          <p className="text-sm text-gray-600">1,247 posts</p>
+        </div>
+      </div>
+
+      {/* Cover Photo */}
+      <img src="/c.jpg" className="h-60 w-full rounded-md" />
+      {/* <div className="flex h-70 w-full items-center justify-center rounded-md border-2 border-dashed border-gray-200">
+        <Image className="size-10" />
+      </div> */}
+
+      {/* Left Column - Profile Info */}
+
+      <div className="flex gap-x-5 px-6">
+        <div className="flex space-x-4">
+          {/* <div className="-mt-25 flex size-45 items-center justify-center rounded-full border-2 border-white bg-blue-500 text-4xl font-bold shadow-2xl">
+            AJ
+          </div> */}
+
+          <img
+            src="/yusuf.jpg"
+            alt=""
+            className="-mt-25 flex size-45 items-center justify-center rounded-full border-2 border-white"
+          />
+
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Alex Johnson</h2>
+            <p className="text-lg text-gray-600">@alexjohnson</p>
+          </div>
+        </div>
+
+        <div>
+          <button className="mt-1 flex items-center gap-x-2 rounded-md border border-gray-800 px-4 py-1 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50">
+            <span>Edit profile</span>
+            <Edit2 className="text-gray-800" size={15} />
+          </button>
+        </div>
+      </div>
+
+      <div className="mx-auto flex w-full flex-1 gap-x-20 border-t border-gray-200 px-10 pt-4">
+        {/* Profile Info */}
+
+        <div className="h-60 basis-2/5 space-y-4 rounded-xl border border-gray-200 bg-gray-50 p-6">
+          <p className="leading-relaxed text-gray-800">
+            Full-stack developer 💻 | Coffee enthusiast ☕ | Building the future
+            one line of code at a time 🚀
+          </p>
+
+          <div className="space-y-2 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <Calendar className="h-4 w-4" />
+              <span>Joined March 2019</span>
+            </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="border-t border-gray-300 pt-4">
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="rounded-lg border border-gray-200 bg-white p-3">
+                <div className="text-xl font-bold text-blue-600">1.2K</div>
+                <div className="text-xs text-gray-500">Posts</div>
+              </div>
+              <div className="rounded-lg border border-gray-200 bg-white p-3">
+                <div className="text-xl font-bold text-purple-600">4.8K</div>
+                <div className="text-xs text-gray-500">Likes</div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Cover Photo */}
-        <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600"></div>
-
-        {/* Profile Section */}
-        <div className="px-4 pb-4">
-          {/* Profile Picture and Actions */}
-          <div className="-mt-16 mb-3 flex items-start justify-between">
-            <div className="flex h-32 w-32 items-center justify-center rounded-full border-4 border-gray-200 bg-gradient-to-br from-blue-500 to-purple-600 text-3xl font-bold">
-              AJ
-            </div>
-            <div className="mt-16">
-              <button className="rounded-full border border-gray-600 px-4 py-1.5 text-sm font-semibold transition-colors hover:bg-gray-900">
-                Edit profile
+        <div className="">
+          {/* Tabs */}
+          <div className="-mt-19 mb-6 flex-shrink-0 border-b border-gray-200">
+            <div className="flex space-x-8">
+              <button
+                onClick={() => setActiveTab("posts")}
+                className={`relative px-2 py-4 text-lg font-semibold transition-colors hover:text-gray-900 ${
+                  activeTab === "posts" ? "text-gray-900" : "text-gray-500"
+                }`}
+              >
+                Posts
+                {activeTab === "posts" && (
+                  <div className="absolute right-0 bottom-0 left-0 h-1 rounded-full bg-blue-500"></div>
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab("images")}
+                className={`relative px-2 py-4 text-lg font-semibold transition-colors hover:text-gray-900 ${
+                  activeTab === "images" ? "text-gray-900" : "text-gray-500"
+                }`}
+              >
+                Images
+                {activeTab === "images" && (
+                  <div className="absolute right-0 bottom-0 left-0 h-1 rounded-full bg-blue-500"></div>
+                )}
               </button>
             </div>
           </div>
-
-          {/* Profile Info */}
-          <div className="space-y-3 text-black">
-            <div>
-              <h2 className="text-xl font-bold">Alex Johnson</h2>
-              <p className="text-gray-500">@alexjohnson</p>
-            </div>
-
-            <p className="text-gray-100">
-              Full-stack developer 💻 | Coffee enthusiast ☕ | Building the
-              future one line of code at a time 🚀
-            </p>
-
-            <div className="flex items-center space-x-4 text-sm text-gray-500">
-              <div className="flex items-center space-x-1">
-                <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Calendar className="h-4 w-4" />
-                <span>Joined March 2019</span>
-              </div>
-            </div>
-          </div>
+          <Posts />
         </div>
-
-        {/* Tabs */}
-        <div className="border-b border-gray-800">
-          <div className="flex">
-            <button
-              onClick={() => setActiveTab("posts")}
-              className={`relative flex-1 py-4 text-center text-sm font-semibold transition-colors hover:bg-gray-950 ${
-                activeTab === "posts" ? "text-white" : "text-gray-500"
-              }`}
-            >
-              Posts
-              {activeTab === "posts" && (
-                <div className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 transform rounded-full bg-blue-500"></div>
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab("images")}
-              className={`relative flex-1 py-4 text-center text-sm font-semibold transition-colors hover:bg-gray-950 ${
-                activeTab === "images" ? "text-white" : "text-gray-500"
-              }`}
-            >
-              Images
-              {activeTab === "images" && (
-                <div className="absolute bottom-0 left-1/2 h-1 w-14 -translate-x-1/2 transform rounded-full bg-blue-500"></div>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Content */}
-        {activeTab === "posts" ? (
-          <div className="space-y-2 sm:space-y-4">
-            {[1, 2, 3, 4].map((num) => (
-              <Post key={num} />
-            ))}
-          </div>
-        ) : (
-          <div className="p-4">
-            <div className="grid grid-cols-3 gap-1">
-              {Array.from({ length: 12 }, (_, i) => (
-                <div
-                  key={i}
-                  className="aspect-square cursor-pointer rounded bg-gradient-to-br from-blue-500 via-purple-600 to-yellow-500 transition-transform hover:scale-105"
-                ></div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
