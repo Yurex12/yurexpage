@@ -74,112 +74,70 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="flex h-full flex-col space-y-2 px-10 pt-4">
+    <div className="flex h-full flex-col overflow-y-auto px-0 pt-4">
       {/* Header */}
-
       <div className="flex items-center space-x-6 rounded-md border border-gray-200 bg-white px-4 py-4">
         <MoveLeft className="size-10 cursor-pointer rounded-full p-1 hover:bg-gray-100" />
         <div>
-          <h1 className="text-xl font-bold text-gray-800">Alex Johnson</h1>
-          <p className="text-sm text-gray-600">1,247 posts</p>
+          {/* <h1 className="text-xl font-bold text-gray-800">Alex Johnson</h1> */}
+          {/* <p className="text-sm text-gray-600">1,247 posts</p> */}
         </div>
       </div>
 
       {/* Cover Photo */}
-      <img src="/c.jpg" className="h-60 w-full rounded-md" />
-      {/* <div className="flex h-70 w-full items-center justify-center rounded-md border-2 border-dashed border-gray-200">
-        <Image className="size-10" />
-      </div> */}
+      <img src="/c.jpg" className="h-30 w-full" />
 
-      {/* Left Column - Profile Info */}
-
-      <div className="flex gap-x-5 px-6">
-        <div className="flex space-x-4">
-          {/* <div className="-mt-25 flex size-45 items-center justify-center rounded-full border-2 border-white bg-blue-500 text-4xl font-bold shadow-2xl">
-            AJ
-          </div> */}
-
+      {/* - Profile Info */}
+      <div className="px-2">
+        {/* top - photo & edit */}
+        <div className="flex justify-between">
           <img
-            src="/yusuf.jpg"
+            src="/b.jpg"
             alt=""
-            className="-mt-25 flex size-45 items-center justify-center rounded-full border-2 border-white"
+            className="-mt-8 flex size-20 items-center justify-center rounded-full"
           />
 
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Alex Johnson</h2>
-            <p className="text-lg text-gray-600">@alexjohnson</p>
+            <button className="mt-2 rounded-full border border-gray-200 px-4 py-1 text-sm font-semibold text-gray-900 hover:bg-gray-50">
+              Edit profile
+            </button>
           </div>
         </div>
-
-        <div>
-          <button className="mt-1 flex items-center gap-x-2 rounded-md border border-gray-800 px-4 py-1 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50">
-            <span>Edit profile</span>
-            <Edit2 className="text-gray-800" size={15} />
-          </button>
+        {/* bottom - username */}
+        <div className="px-2">
+          <h3 className="text-lg font-bold text-gray-900">Alex Johnson</h3>
+          <span className="text-xs text-gray-500">@alexjohnson</span>
         </div>
       </div>
 
-      <div className="mx-auto flex w-full flex-1 gap-x-20 border-t border-gray-200 px-10 pt-4">
-        {/* Profile Info */}
+      {/* stats */}
+      <div className="mt-4 space-y-4 px-4">
+        <p className="leading-relaxed text-gray-800">
+          Full-stack developer 💻 | Coffee enthusiast ☕ | Building the future
+          one line of code at a time 🚀
+        </p>
 
-        <div className="h-60 basis-2/5 space-y-4 rounded-xl border border-gray-200 bg-gray-50 p-6">
-          <p className="leading-relaxed text-gray-800">
-            Full-stack developer 💻 | Coffee enthusiast ☕ | Building the future
-            one line of code at a time 🚀
-          </p>
+        <div className="flex items-center space-x-2">
+          <Calendar className="h-4 w-4" />
+          <span>Joined March 2019</span>
+        </div>
 
-          <div className="space-y-2 text-sm text-gray-600">
-            <div className="flex items-center space-x-2">
-              <Calendar className="h-4 w-4" />
-              <span>Joined March 2019</span>
+        {/* Quick Stats */}
+        <div className="mt-4">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div className="rounded-lg border border-gray-200 px-3 py-1">
+              <div className="text-lg font-bold text-blue-600">1.2K</div>
+              <div className="text-xs text-gray-500">Posts</div>
             </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="border-t border-gray-300 pt-4">
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="rounded-lg border border-gray-200 bg-white p-3">
-                <div className="text-xl font-bold text-blue-600">1.2K</div>
-                <div className="text-xs text-gray-500">Posts</div>
-              </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-3">
-                <div className="text-xl font-bold text-purple-600">4.8K</div>
-                <div className="text-xs text-gray-500">Likes</div>
-              </div>
+            <div className="rounded-lg border border-gray-200 px-3 py-1">
+              <div className="text-lg font-bold text-purple-600">4.8K</div>
+              <div className="text-xs text-gray-500">Likes</div>
             </div>
           </div>
         </div>
 
-        <div className="">
-          {/* Tabs */}
-          <div className="-mt-19 mb-6 flex-shrink-0 border-b border-gray-200">
-            <div className="flex space-x-8">
-              <button
-                onClick={() => setActiveTab("posts")}
-                className={`relative px-2 py-4 text-lg font-semibold transition-colors hover:text-gray-900 ${
-                  activeTab === "posts" ? "text-gray-900" : "text-gray-500"
-                }`}
-              >
-                Posts
-                {activeTab === "posts" && (
-                  <div className="absolute right-0 bottom-0 left-0 h-1 rounded-full bg-blue-500"></div>
-                )}
-              </button>
-              <button
-                onClick={() => setActiveTab("images")}
-                className={`relative px-2 py-4 text-lg font-semibold transition-colors hover:text-gray-900 ${
-                  activeTab === "images" ? "text-gray-900" : "text-gray-500"
-                }`}
-              >
-                Images
-                {activeTab === "images" && (
-                  <div className="absolute right-0 bottom-0 left-0 h-1 rounded-full bg-blue-500"></div>
-                )}
-              </button>
-            </div>
-          </div>
-          <Posts />
-        </div>
+        {/* Posts */}
+        <Posts />
       </div>
     </div>
   );
