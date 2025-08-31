@@ -3,13 +3,15 @@
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import CreatePost from "./CreatePost";
 import Post from "./Post";
+import { ComponentProps } from "react";
+import { cn } from "@/lib/utils";
 
-export default function Posts() {
+export default function Posts({ className }: ComponentProps<"div">) {
   const ref = useScrollRestoration<HTMLDivElement>();
 
   return (
     <div
-      className="scrollbar-hide flex-1 space-y-2 overflow-y-scroll pb-4 sm:space-y-4"
+      className={cn("flex-1 space-y-2 pb-4 sm:space-y-4", className)}
       ref={ref}
     >
       <CreatePost />
@@ -21,5 +23,3 @@ export default function Posts() {
     </div>
   );
 }
-
-// sm:pt-4 xl:mt-4 xl:pt-0
