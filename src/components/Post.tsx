@@ -10,7 +10,7 @@ const images: { src: string }[] = [{ src: "/d.jpg" }, { src: "/c.jpg" }];
 
 export default function Post() {
   return (
-    <div className="mx-auto max-w-140 space-y-2 rounded-lg bg-white pt-4 pb-2 sm:space-y-3 sm:not-first:shadow">
+    <div className="max-w-140 space-y-2 rounded-lg bg-white pt-4 pb-2 sm:space-y-3 sm:not-first:shadow">
       <PostHeader />
       <TextExpander
         className="px-4"

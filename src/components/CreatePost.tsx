@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { ComponentProps, useState } from "react";
 
 import { ImageIcon } from "lucide-react";
 
@@ -10,8 +10,9 @@ import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
 import { Image } from "@/types/types";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-export default function CreatePost() {
+export default function CreatePost({ className }: ComponentProps<"div">) {
   const [openPostDialog, setOpenPostDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [text, setText] = useState("");
@@ -53,7 +54,12 @@ export default function CreatePost() {
 
   return (
     <>
-      <div className="mx-auto flex w-auto items-center gap-3 rounded-xl bg-white px-4 py-3 sm:shadow-sm md:w-140">
+      <div
+        className={cn(
+          "flex w-auto items-center gap-3 rounded-xl bg-white px-4 py-3 sm:shadow-sm",
+          className,
+        )}
+      >
         {/* Profile Picture */}
         <img
           src="/b.jpg"

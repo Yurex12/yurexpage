@@ -14,7 +14,7 @@ export default function Posts({ className }: ComponentProps<"div">) {
       className={cn("flex-1 space-y-2 pb-4 sm:space-y-4", className)}
       ref={ref}
     >
-      <CreatePost />
+      <CreatePost className="w-full max-w-140" />
       <div className="space-y-2 sm:space-y-4">
         {[1, 2, 3, 4].map((num) => (
           <Post key={num} />
