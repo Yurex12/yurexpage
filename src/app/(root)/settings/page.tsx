@@ -1,4 +1,3 @@
-// app/settings/page.tsx
 "use client";
 
 import { ModeToggle } from "@/components/ModeToggle";

@@ -1,4 +1,5 @@
-import { Link } from "@/types/types";
+"use client";
+import { Link, Tab } from "@/types/types";
 import { Home, Settings, User } from "lucide-react";
 
 export const MOBILE_DEVICE_BREAKPOINT = 480;
@@ -7,7 +8,14 @@ export const DESKTOP_BREAKPOINT = 850;
 
 export const links: Link[] = [
   { name: "Home", href: "/", icon: Home },
-  { name: "Profile", href: "/profile", icon: User },
+  {
+    name: "Profile",
+    href:
+      window.innerWidth > MOBILE_DEVICE_BREAKPOINT
+        ? "/profile"
+        : "/profile-mobile",
+    icon: User,
+  },
   {
     name: "Settings",
     href:
@@ -17,3 +25,5 @@ export const links: Link[] = [
     icon: Settings,
   },
 ];
+
+export const tabs: Tab = ["posts", "images"];

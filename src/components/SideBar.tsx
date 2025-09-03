@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { links } from "@/constants";
 
 export function SideBar() {
+  console.log(links);
+
   const pathname = usePathname();
 
   return (
