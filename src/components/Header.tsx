@@ -1,18 +1,19 @@
 "use client";
+import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
 import { BellDotIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
 import MobileNavbar from "./MobileNavbar";
 import Notifications from "./Notifications";
 import { UserAvatar } from "./UserAvatar";
 import { Dialog, DialogContent } from "./ui/dialog";
-import { useRouter } from "next/navigation";
-import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
 
 export function Header() {
   const [showNotification, setShowNotification] = useState(false);
 
   const router = useRouter();
+
   function handleShowNotification() {
     if (window.innerWidth > MOBILE_DEVICE_BREAKPOINT)
       setShowNotification((show) => !show);

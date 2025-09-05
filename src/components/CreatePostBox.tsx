@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
-import { Image as ImageType } from '@/types/types';
-import CreatePostFooter from './CreatePostFooter';
-import ImageUploader from './ImageUploader';
-import CreatePostImagePreviews from './CreatePostImagePreviews';
+import { Image as ImageType } from "@/types/types";
+import CreatePostFooter from "./CreatePostFooter";
+import ImageUploader from "./ImageUploader";
+import CreatePostImagePreviews from "./CreatePostImagePreviews";
 
 export default function CreatePostBox() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [images, setImages] = useState<ImageType[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -18,18 +18,18 @@ export default function CreatePostBox() {
 
   const handleSubmit = () => {
     if (text.trim() || images.length > 0) {
-      console.log('Post submitted:', { text, images });
-      setText('');
+      console.log("Post submitted:", { text, images });
+      setText("");
       setImages([]);
     }
-    textareaRef.current!.style.height = 'auto';
+    textareaRef.current!.style.height = "auto";
   };
 
   const handleAutoResizeTextarea = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
     const el = textareaRef.current;
     if (!el) return;
-    el.style.height = 'auto';
+    el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   };
 
@@ -38,28 +38,27 @@ export default function CreatePostBox() {
   }
 
   return (
-    <div className='flex flex-col gap-y-2 h-11/12 px-4 sm:px-8 mt-2'>
-      <h1 className='text-2xl'>Create Post</h1>
-      {/* Content: text $ images */}
+    <div className="mt-2 flex h-11/12 flex-col gap-y-2 px-4 sm:px-8">
+      <h1 className="text-2xl">Create Post</h1>
+
       <div
-        className='border overflow-auto border-slate-300 flex-1 p-2 rounded-md cursor-text'
+        className="flex-1 cursor-text overflow-auto rounded-md border border-slate-300 p-2"
         onClick={handleFocus}
       >
-        {/* Text */}
         <textarea
           value={text}
           ref={textareaRef}
           onChange={handleAutoResizeTextarea}
           placeholder="What's on your mind?"
-          className='w-full outline-none font-normal resize-none bg-transparent text-gray-900 leading-relaxed placeholder:text-gray-500'
+          className="w-full resize-none bg-transparent leading-relaxed font-normal text-gray-900 outline-none placeholder:text-gray-500"
           rows={1}
         />
-        {/* Image Previews */}
+
         <CreatePostImagePreviews images={images} setImages={setImages} />
       </div>
-      {/* Image Upload Section */}
+
       <ImageUploader images={images} setImages={setImages} />
-      {/* Footer */}
+
       <CreatePostFooter
         text={text}
         imageLength={images.length}

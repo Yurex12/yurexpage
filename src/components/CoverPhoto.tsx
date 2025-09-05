@@ -1,13 +1,11 @@
-import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+type TCoverPhoto = {
+  imageAlt: string;
+  imageSrc: string;
+};
 
-export default function CoverPhoto({
-  className,
-  imageSrc,
-  imageAlt,
-}: ComponentProps<"div"> & { imageAlt: string; imageSrc: string }) {
+export default function CoverPhoto({ imageSrc, imageAlt }: TCoverPhoto) {
   return (
-    <div className={cn("h-30 w-full rounded-md", className)}>
+    <div className="h-30 w-full rounded-md md:h-60">
       <img src={imageSrc} alt={imageAlt} className="size-full md:rounded-md" />
     </div>
   );

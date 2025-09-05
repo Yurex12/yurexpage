@@ -1,16 +1,16 @@
-import { LucideProps } from 'lucide-react';
+import { LucideProps } from "lucide-react";
 import {
   Dispatch,
   ForwardRefExoticComponent,
   RefAttributes,
   SetStateAction,
-} from 'react';
+} from "react";
 
 export type Link = {
   name: string;
   href: string;
   icon: ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
   >;
 };
 
@@ -27,3 +27,5 @@ export type CreatePostDialogProps = {
   setText: Dispatch<SetStateAction<string>>;
   setImages: Dispatch<SetStateAction<Image[]>>;
 };
+
+export type Tab = ["posts", "images"];

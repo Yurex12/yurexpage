@@ -1,50 +1,29 @@
-import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 
 type TProfileDetails = {
-  containerClassName?: string;
-  innerContainerClassName?: string;
-  userNameClassName?: string;
-  profileNameClassName?: string;
   profileName: string;
   userName: string;
-  imageClassName?: string;
   imageSrc: string;
 };
 
 export default function ProfileDetails({
-  containerClassName,
-  innerContainerClassName,
-  profileNameClassName,
-  userNameClassName,
   profileName,
   userName,
-  imageClassName,
   imageSrc,
 }: TProfileDetails) {
   return (
-    <div className={containerClassName}>
-      <div className={cn("flex", innerContainerClassName)}>
+    <div className="flex justify-between px-2 md:px-4">
+      <div className="flex flex-col md:flex-row">
         <img
           src={imageSrc}
           alt={userName}
-          className={cn(
-            "-mt-8 flex size-20 items-center justify-center rounded-full",
-            imageClassName,
-          )}
+          className="-mt-8 flex size-20 items-center justify-center rounded-full md:-mt-20 md:size-40"
         />
         <div className="flex flex-col px-2">
-          <span
-            className={cn(
-              "text-lg font-bold text-gray-900",
-              profileNameClassName,
-            )}
-          >
+          <span className="text-lg font-bold text-gray-900 md:text-2xl lg:text-3xl">
             {profileName}
           </span>
-          <span className={cn("text-xs text-gray-500", userNameClassName)}>
-            @{userName}
-          </span>
+          <span className="text-xs text-gray-500 md:text-sm">@{userName}</span>
         </div>
       </div>
 

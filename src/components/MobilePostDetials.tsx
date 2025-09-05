@@ -11,6 +11,7 @@ import PostHeader from "./PostHeader";
 import PostImage from "./PostImage";
 import PostInteractions from "./PostInteractions";
 import TextExpander from "./TextExpander";
+import PageHeader from "./PageHeader";
 
 const slides: { src: string }[] = [{ src: "/yusuf.jpg" }, { src: "/c.jpg" }];
 
@@ -27,12 +28,13 @@ export default function MobilePostDetials() {
   const handleAutoFocus = () => textArearef.current?.focus();
 
   return (
-    <div className="auto ms:border mx-auto flex h-full flex-col rounded-sm sm:max-w-160 sm:border sm:border-gray-200">
+    <div className="bg- mx-auto flex h-full flex-col rounded-sm sm:max-w-160 sm:border sm:border-gray-200">
       {/* Header */}
-      <div className="flex w-full items-center gap-x-3 border-b border-b-gray-200 bg-white px-2 py-2">
-        <BackButton />
-        <span className="text-base">Post</span>
-      </div>
+
+      <PageHeader
+        title="Post"
+        containerClassName="gap-x-3 border-b border-b-gray-200 bg-transparent"
+      />
 
       <div className="flex-1 overflow-y-auto py-2" ref={ref}>
         <PostHeader />

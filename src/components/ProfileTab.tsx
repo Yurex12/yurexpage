@@ -1,12 +1,18 @@
 "use client";
 
 import { tabs } from "@/constants";
+import { cn } from "@/lib/utils";
 import { ComponentProps, useState } from "react";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
 
 export default function ProfileTab({ className }: ComponentProps<"div">) {
   const [activeTab, setActiveTab] = useState<"posts" | "images">("posts");
+
+  // const searchParams = useSearchParams();
+
+  // function handleTab(value: string) {
+  //   searchParams.
+  // }
 
   return (
     <div className={cn("sticky flex gap-x-2 px-2 py-2", className)}>

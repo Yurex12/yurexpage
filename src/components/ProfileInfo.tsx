@@ -1,8 +1,6 @@
-import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
 
 type TProfileInfo = {
-  containerClassName?: string;
   bio: string;
   dateJoined: string;
   totalPosts: number;
@@ -10,14 +8,13 @@ type TProfileInfo = {
 };
 
 export default function ProfileInfo({
-  containerClassName,
   bio,
   dateJoined,
   totalPosts,
   totalPostsLikes,
 }: TProfileInfo) {
   return (
-    <div className={cn("space-y-4 rounded-md px-4 py-1", containerClassName)}>
+    <div className="space-y-4 px-4 py-1 md:sticky md:top-20 md:rounded-md md:border md:border-gray-200 md:bg-white md:py-4">
       <p className="leading-relaxed text-gray-800">{bio}</p>
 
       <div className="flex items-center space-x-2">
