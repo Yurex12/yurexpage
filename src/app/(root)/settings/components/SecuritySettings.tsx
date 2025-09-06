@@ -1,29 +1,28 @@
 import { Button } from "@/components/ui/button";
 import { LogOut, Monitor, Smartphone } from "lucide-react";
 
-export default function SeuritySettings() {
-  // Example data (in real case, fetch from backend)
-  const sessions = [
-    {
-      id: 1,
-      device: "Chrome on Windows",
-      ip: "192.168.0.12",
-      location: "Lagos, Nigeria",
-      lastActive: "Just now",
-      current: true,
-      icon: <Monitor className="h-5 w-5 text-blue-600" />,
-    },
-    {
-      id: 2,
-      device: "Safari on iPhone",
-      ip: "192.168.0.33",
-      location: "Abuja, Nigeria",
-      lastActive: "2 hours ago",
-      current: false,
-      icon: <Smartphone className="h-5 w-5 text-green-600" />,
-    },
-  ];
+const sessions = [
+  {
+    id: 1,
+    device: "Chrome on Windows",
+    ip: "192.168.0.12",
+    location: "Lagos, Nigeria",
+    lastActive: "Just now",
+    current: true,
+    icon: <Monitor className="h-5 w-5 text-blue-600" />,
+  },
+  {
+    id: 2,
+    device: "Safari on iPhone",
+    ip: "192.168.0.33",
+    location: "Abuja, Nigeria",
+    lastActive: "2 hours ago",
+    current: false,
+    icon: <Smartphone className="h-5 w-5 text-green-600" />,
+  },
+];
 
+export default function SeuritySettings() {
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-medium text-gray-900">Active Sessions</h2>
