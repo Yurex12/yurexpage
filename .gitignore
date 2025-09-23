@@ -59,3 +59,5 @@ node_modules
 ignition/deployments/chain-31337
 
 /src/generated/prisma
+
+/src/generated/prisma

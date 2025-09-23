@@ -8,6 +8,7 @@ import MobileNavbar from "./MobileNavbar";
 import Notifications from "./Notifications";
 import { UserAvatar } from "./UserAvatar";
 import { Dialog, DialogContent } from "./ui/dialog";
+import LogoutButton from "@/app/auth/components/LogoutButton";
 
 export function Header() {
   const [showNotification, setShowNotification] = useState(false);
@@ -34,6 +35,7 @@ export function Header() {
               }`}
             />
             <UserAvatar />
+            <LogoutButton />
             <MobileNavbar />
           </div>
         </div>
