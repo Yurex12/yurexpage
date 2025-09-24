@@ -39,7 +39,7 @@ export default function SigninForm() {
   };
 
   const handleError = (ctx: ErrorContext) => {
-    toast.error(ctx.error.message ?? "Something went wrong");
+    toast.error(ctx.error.message || "Something went wrong");
   };
 
   async function onsubmit({ identifier, password, rememberMe }: TSigninSchema) {
