@@ -16,7 +16,9 @@ export default function LogoutButton() {
           onSuccess: () => {
             router.push("/auth/signin");
           },
-          onError: () => {
+          onError: (ctc) => {
+            console.log(ctc.error);
+
             toast.error("Something went wrong");
           },
         },

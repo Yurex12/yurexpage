@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.className} h-dvh border-4 text-sm break-words text-gray-600 antialiased md:text-base`}
+        className={`${outfit.className} h-dvh text-sm break-words text-gray-600 antialiased md:text-base`}
       >
         <ThemeProvider
           attribute="class"

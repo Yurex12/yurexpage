@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { signInWithGoogle } from "@/lib/actions/authAction";
 import { authClient } from "@/lib/auth-client";
 import { useTransition } from "react";
 import toast from "react-hot-toast";

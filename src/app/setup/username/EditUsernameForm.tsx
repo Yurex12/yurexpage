@@ -1,10 +1,14 @@
+"use client";
+
 import { authClient } from "@/lib/auth-client";
 import { Check, Loader2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
+import MiniSpinner from "@/components/MiniSpinner";
 import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -16,68 +20,56 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useNetworkStatus from "@/hooks/useNetworkStatus";
 import { existingUser } from "@/lib/actions/authActions";
+import { User } from "@/lib/auth";
+import { TUsernameSchema, usernameSchema } from "@/lib/schemas/usernameSchem";
 import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
-
-const formSchema = z.object({
-  username: z
-    .string()
-    .trim()
-    .superRefine((val, ctx) => {
-      if (!val) return;
-      if (val.length < 8) {
-        ctx.addIssue({
-          code: "custom",
-          message: "username must be at least 8 characters.",
-        });
-      }
-
-      if (val.length > 15) {
-        ctx.addIssue({
-          code: "custom",
-          message: "username should not be more than 15 characters.",
-        });
-      }
-
-      if (!/^[a-zA-Z0-9_]+$/.test(val)) {
-        ctx.addIssue({
-          code: "custom",
-          message: "username can only contain letters, numbers, and '_'",
-        });
-      }
-    }),
-});
+import { useRouter } from "next/navigation";
+import CurrentUsername from "../components/CurrentUsername";
+import SkipButton from "../components/SkipButton";
+import UsernameSuggestions from "./UsernameSuggestions";
 
 interface EditUsernameFormProps {
-  currentUsername?: string;
-  onSkip?: () => void;
   showSkipOption?: boolean;
-  suggestions?: string[];
+  user: User;
 }
 
 export default function EditUsernameForm({
-  currentUsername = "adeyemi_",
-  onSkip,
+  user,
   showSkipOption = true,
-  suggestions = ["cosmic_dev", "pixel_master", "code_wizard"],
 }: EditUsernameFormProps) {
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   const { isOnline } = useNetworkStatus();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<TUsernameSchema>({
+    resolver: zodResolver(usernameSchema),
     mode: "onChange",
     defaultValues: {
-      username: "yurex_12",
+      username: "",
     },
   });
+  const router = useRouter();
 
   const watchedUsername = form.watch("username");
 
-  // Real-time availability checking
+  const currentUsername = user.username!;
+
+  // useEffect(() => {
+  //   const newSuggestions = [];
+
+  //   for (let index = 0; index < 3; index++) {
+  //     const newUsername = generateUsername(user.name, user.email, 1);
+  //     newSuggestions.push(newUsername);
+
+  //     console.log(newSuggestions, 1);
+  //   }
+  //   setSuggestions(newSuggestions);
+  // }, [user.name, user.email]);
+
   useEffect(() => {
     setIsAvailable(null);
     setAvailabilityMessage("");
@@ -125,7 +117,7 @@ export default function EditUsernameForm({
     return () => clearTimeout(timer);
   }, [watchedUsername, form.formState.isValid, currentUsername, isOnline]);
 
-  async function onSubmit({ username }: z.infer<typeof formSchema>) {
+  async function onSubmit({ username }: TUsernameSchema) {
     if (username.toLowerCase() === currentUsername?.toLowerCase()) {
       toast.error("That's already your current username!");
       return;
@@ -144,6 +136,7 @@ export default function EditUsernameForm({
           onSuccess: () => {
             toast.success("Username updated successfully!");
             form.reset();
+            router.refresh();
           },
           onError: (ctx) => {
             toast.error(ctx.error.message || "Failed to update username");
@@ -186,19 +179,12 @@ export default function EditUsernameForm({
 
   const handleSuggestionClick = (suggestion: string) => {
     form.setValue("username", suggestion);
-    form.trigger("username"); // Trigger validation
+    form.trigger("username");
   };
 
   return (
-    <div className="space-y-6">
-      {currentUsername && (
-        <div className="flex items-center justify-between rounded-lg border border-blue-100 bg-blue-50/50 px-4 py-3">
-          <span className="text-sm text-gray-600">Current username:</span>
-          <span className="rounded-md bg-white px-3 py-1 text-sm font-semibold text-blue-700 shadow-sm">
-            @{currentUsername}
-          </span>
-        </div>
-      )}
+    <CardContent className="space-y-6">
+      <CurrentUsername username={currentUsername} />
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -226,7 +212,6 @@ export default function EditUsernameForm({
                   </div>
                 </FormControl>
 
-                {/* Availability Message */}
                 {availabilityMessage && (
                   <div className={getMessageColor()}>
                     <span className="text-sm font-normal">
@@ -239,26 +224,12 @@ export default function EditUsernameForm({
               </FormItem>
             )}
           />
-          {/* Username Suggestions */}
-          {suggestions && suggestions.length > 0 && (
-            <div className="flex gap-x-1">
-              <div className="text-sm font-medium text-gray-700">
-                suggestions:
-              </div>
-              <div className="flex flex-wrap gap-x-1">
-                {suggestions.map((suggestion, index) => (
-                  <span
-                    key={index}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="text-sm text-blue-600 hover:cursor-pointer"
-                  >
-                    {suggestion}
-                    {index !== suggestions.length - 1 ? "," : ""}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+
+          <UsernameSuggestions
+            suggestions={suggestions}
+            handleSuggestionClick={handleSuggestionClick}
+          />
+
           <div className="space-y-3">
             <Button
               type="submit"
@@ -274,29 +245,18 @@ export default function EditUsernameForm({
               className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-700 text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:from-blue-600 hover:via-blue-700 hover:to-indigo-800 hover:shadow-2xl disabled:from-gray-400 disabled:via-gray-500 disabled:to-gray-500 disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-lg"
             >
               {form.formState.isSubmitting ? (
-                <div className="flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Updating...
-                </div>
+                <MiniSpinner text="Updating..." />
               ) : (
                 "Update Username"
               )}
             </Button>
 
             {showSkipOption && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onSkip}
-                disabled={form.formState.isSubmitting}
-                className="w-full text-gray-500 hover:text-gray-700"
-              >
-                Skip for now
-              </Button>
+              <SkipButton disabled={form.formState.isSubmitting} />
             )}
           </div>
         </form>
       </Form>
-    </div>
+    </CardContent>
   );
 }

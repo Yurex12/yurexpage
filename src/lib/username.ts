@@ -22,12 +22,14 @@ export function generateUsername(
     candidate = base.slice(0, maxLen);
   } else {
     // Later retries → append something random/unique
+    console.log(candidate);
     const chars = "0123456789_";
     const suffix = Array.from({ length: Math.min(3, attempt) }, () =>
       chars.charAt(Math.floor(Math.random() * chars.length)),
     ).join("");
 
     candidate = (base + suffix).slice(0, maxLen);
+    console.log(candidate);
   }
 
   // Ensure minimum length

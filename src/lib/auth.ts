@@ -44,6 +44,21 @@ export const auth = betterAuth({
       },
     },
   },
+  user: {
+    additionalFields: {
+      username: {
+        type: "string",
+        required: false,
+        input: false,
+        unique: true,
+      },
+      bio: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+    },
+  },
 
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -77,3 +92,6 @@ export const auth = betterAuth({
   },
   plugins: [username(), nextCookies()],
 });
+
+export type Session = typeof auth.$Infer.Session;
+export type User = typeof auth.$Infer.Session.user;
