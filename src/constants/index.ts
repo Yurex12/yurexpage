@@ -134,3 +134,7 @@ export const notifications = [
     unread: false,
   },
 ];
+
+export const MIN_USERNAME_LENGTH = 4;
+export const MAX_USERNAME_LENGTH = 15;
+export const USERNAME_AVAILABILITY_DEBOUNCE = 500; // ms

@@ -6,10 +6,10 @@ export const usernameSchema = z.object({
     .trim()
     .superRefine((val, ctx) => {
       if (!val) return;
-      if (val.length < 8) {
+      if (val.length < 4) {
         ctx.addIssue({
           code: "custom",
-          message: "username must be at least 8 characters.",
+          message: "username must be at least 4 characters.",
         });
       }
 

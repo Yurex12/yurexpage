@@ -27,22 +27,26 @@ import { useRouter } from "next/navigation";
 import CurrentUsername from "../components/CurrentUsername";
 import SkipButton from "../components/SkipButton";
 import UsernameSuggestions from "./UsernameSuggestions";
+import { generateSuggestions } from "@/lib/username";
+import { MIN_USERNAME_LENGTH } from "@/constants";
 
-interface EditUsernameFormProps {
+type EditUsernameFormProps = {
   showSkipOption?: boolean;
   user: User;
-}
+};
+
+export const USERNAME_AVAILABILITY_DEBOUNCE = 500;
 
 export default function EditUsernameForm({
   user,
   showSkipOption = true,
 }: EditUsernameFormProps) {
-  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
-  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
-  const [availabilityMessage, setAvailabilityMessage] = useState<string>("");
+  const [availability, setAvailability] = useState<{
+    status: "idle" | "checking" | "available" | "taken" | "error";
+    message: string;
+  }>({ status: "idle", message: "" });
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
-
   const { isOnline } = useNetworkStatus();
 
   const form = useForm<TUsernameSchema>({
@@ -55,34 +59,27 @@ export default function EditUsernameForm({
   const router = useRouter();
 
   const watchedUsername = form.watch("username");
-
   const currentUsername = user.username!;
 
-  // useEffect(() => {
-  //   const newSuggestions = [];
-
-  //   for (let index = 0; index < 3; index++) {
-  //     const newUsername = generateUsername(user.name, user.email, 1);
-  //     newSuggestions.push(newUsername);
-
-  //     console.log(newSuggestions, 1);
-  //   }
-  //   setSuggestions(newSuggestions);
-  // }, [user.name, user.email]);
+  useEffect(() => {
+    const suggestions = generateSuggestions(user.name);
+    setSuggestions(suggestions);
+  }, [user.name]);
 
   useEffect(() => {
-    setIsAvailable(null);
-    setAvailabilityMessage("");
+    setAvailability({ status: "idle", message: "" });
 
     if (
       !watchedUsername ||
-      watchedUsername.length < 8 ||
+      watchedUsername.length < MIN_USERNAME_LENGTH ||
       !form.formState.isValid ||
       watchedUsername.toLowerCase() === currentUsername?.toLowerCase()
     ) {
       if (watchedUsername.toLowerCase() === currentUsername?.toLowerCase()) {
-        setIsAvailable(true);
-        setAvailabilityMessage("This is your current username");
+        setAvailability({
+          status: "available",
+          message: "This is your current username",
+        });
       }
       return;
     }
@@ -90,29 +87,26 @@ export default function EditUsernameForm({
     if (!isOnline) return;
 
     const timer = setTimeout(async () => {
-      setIsCheckingAvailability(true);
-      setIsAvailable(null);
-      setAvailabilityMessage("");
+      setAvailability({ status: "checking", message: "" });
 
       try {
         const result = await existingUser(watchedUsername);
         if (result.success) {
-          setIsAvailable(true);
-          setAvailabilityMessage("Great! This username is available");
+          setAvailability({
+            status: "available",
+            message: "Great! This username is available",
+          });
         } else {
-          setIsAvailable(false);
-          setAvailabilityMessage("This username is already taken");
+          setAvailability({ status: "taken", message: result.message });
         }
       } catch (error) {
         console.error("Availability check failed:", error);
-        setIsAvailable(null);
-        setAvailabilityMessage(
-          "Unable to check availability. Please try again.",
-        );
-      } finally {
-        setIsCheckingAvailability(false);
+        setAvailability({
+          status: "error",
+          message: "Unable to check availability. Please try again.",
+        });
       }
-    }, 500);
+    }, USERNAME_AVAILABILITY_DEBOUNCE);
 
     return () => clearTimeout(timer);
   }, [watchedUsername, form.formState.isValid, currentUsername, isOnline]);
@@ -123,7 +117,7 @@ export default function EditUsernameForm({
       return;
     }
 
-    if (isAvailable !== true) {
+    if (availability.status !== "available") {
       toast.error("Please wait for username availability check");
       return;
     }
@@ -151,27 +145,40 @@ export default function EditUsernameForm({
   const getStatusIcon = () => {
     if (
       !watchedUsername ||
-      watchedUsername.length < 8 ||
+      watchedUsername.length < MIN_USERNAME_LENGTH ||
       !form.formState.isValid
     ) {
       return null;
     }
 
-    if (isCheckingAvailability)
-      return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
-
-    if (isAvailable === true)
-      return <Check className="h-4 w-4 text-green-500" />;
-
-    if (isAvailable === false) return <X className="h-4 w-4 text-red-500" />;
+    if (availability.status === "checking") {
+      return <Loader2 className="size-4 animate-spin text-blue-500" />;
+    }
+    if (availability.status === "available") {
+      return <Check className="size-4 text-green-500" />;
+    }
+    if (availability.status === "taken") {
+      return <X className="size-4 text-red-500" />;
+    }
+    if (availability.status === "error") {
+      return <X className="size-4 text-red-500" />;
+    }
 
     return null;
   };
 
   const getMessageColor = () => {
-    if (isCheckingAvailability) return "text-blue-500";
-    if (isAvailable === true) return "text-green-500";
-    if (isAvailable === false) return "text-red-500";
+    switch (availability.status) {
+      case "checking":
+        return "text-blue-500";
+      case "available":
+        return "text-green-500";
+      case "taken":
+      case "error":
+        return "text-red-500";
+      default:
+        return "text-gray-700";
+    }
   };
 
   const isCurrentUsername =
@@ -212,10 +219,10 @@ export default function EditUsernameForm({
                   </div>
                 </FormControl>
 
-                {availabilityMessage && (
+                {availability.message && (
                   <div className={getMessageColor()}>
                     <span className="text-sm font-normal">
-                      {availabilityMessage}
+                      {availability.message}
                     </span>
                   </div>
                 )}
@@ -225,10 +232,12 @@ export default function EditUsernameForm({
             )}
           />
 
-          <UsernameSuggestions
-            suggestions={suggestions}
-            handleSuggestionClick={handleSuggestionClick}
-          />
+          {suggestions.length ? (
+            <UsernameSuggestions
+              suggestions={suggestions}
+              handleSuggestionClick={handleSuggestionClick}
+            />
+          ) : null}
 
           <div className="space-y-3">
             <Button
@@ -238,8 +247,7 @@ export default function EditUsernameForm({
                 !form.formState.isValid ||
                 form.formState.isSubmitting ||
                 !isOnline ||
-                isCheckingAvailability ||
-                isAvailable !== true ||
+                availability.status !== "available" ||
                 isCurrentUsername
               }
               className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-700 text-white shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:from-blue-600 hover:via-blue-700 hover:to-indigo-800 hover:shadow-2xl disabled:from-gray-400 disabled:via-gray-500 disabled:to-gray-500 disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-lg"

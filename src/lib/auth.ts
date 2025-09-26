@@ -19,7 +19,7 @@ export const auth = betterAuth({
           const MAX_TRIES = 30;
 
           for (let i = 0; i < MAX_TRIES; i++) {
-            const candidate = generateUsername(user.name, user.email, i);
+            const candidate = generateUsername(user.name, i);
 
             const usernameExist = await prisma.user.findUnique({
               where: { username: candidate },
@@ -80,11 +80,9 @@ export const auth = betterAuth({
           ctx.body,
         );
 
-        console.log(validatedFields);
-
         if (!validatedFields.success) {
           throw new APIError("BAD_REQUEST", {
-            message: "Please eneter correct details",
+            message: "Please enter correct details",
           });
         }
       }

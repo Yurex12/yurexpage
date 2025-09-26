@@ -10,7 +10,7 @@ export async function existingUser(username: string) {
     // Validate input server-side as well
     if (
       !normalizedUsername ||
-      normalizedUsername.length < 8 ||
+      normalizedUsername.length < 4 ||
       normalizedUsername.length > 15
     ) {
       return {
