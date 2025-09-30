@@ -1,8 +1,10 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { Check, Loader2, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, Loader2, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -18,22 +20,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useNetworkStatus from "@/hooks/useNetworkStatus";
-import { existingUser } from "@/lib/actions/authActions";
-import { User } from "@/lib/auth";
-import { TUsernameSchema, usernameSchema } from "@/lib/schemas/usernameSchem";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import CurrentUsername from "../components/CurrentUsername";
 import SkipButton from "../components/SkipButton";
 import UsernameSuggestions from "./UsernameSuggestions";
+
+import { TUsernameSchema, usernameSchema } from "@/lib/schemas/usernameSchema";
+
+import { authClient } from "@/lib/auth-client";
 import { generateSuggestions } from "@/lib/username";
+
+import useNetworkStatus from "@/hooks/useNetworkStatus";
+
 import { MIN_USERNAME_LENGTH } from "@/constants";
 
-type EditUsernameFormProps = {
-  showSkipOption?: boolean;
-  user: User;
-};
+import { EditUsernameFormProps } from "@/types/types";
 
 export const USERNAME_AVAILABILITY_DEBOUNCE = 500;
 
@@ -67,8 +67,6 @@ export default function EditUsernameForm({
   }, [user.name]);
 
   useEffect(() => {
-    setAvailability({ status: "idle", message: "" });
-
     if (
       !watchedUsername ||
       watchedUsername.length < MIN_USERNAME_LENGTH ||
@@ -80,27 +78,48 @@ export default function EditUsernameForm({
           status: "available",
           message: "This is your current username",
         });
+      } else {
+        setAvailability({ status: "idle", message: "" });
       }
       return;
     }
 
-    if (!isOnline) return;
+    if (!isOnline) {
+      setAvailability({
+        status: "error",
+        message: "No internet connection.",
+      });
+      return;
+    }
 
     const timer = setTimeout(async () => {
       setAvailability({ status: "checking", message: "" });
 
       try {
-        const result = await existingUser(watchedUsername);
-        if (result.success) {
+        const { data, error } = await authClient.isUsernameAvailable({
+          username: watchedUsername,
+        });
+
+        if (error) {
+          setAvailability({
+            status: "error",
+            message: "Unable to check availability. Please try again.",
+          });
+          return;
+        }
+
+        if (data?.available) {
           setAvailability({
             status: "available",
             message: "Great! This username is available",
           });
         } else {
-          setAvailability({ status: "taken", message: result.message });
+          setAvailability({
+            status: "taken",
+            message: "This username is already taken",
+          });
         }
-      } catch (error) {
-        console.error("Availability check failed:", error);
+      } catch {
         setAvailability({
           status: "error",
           message: "Unable to check availability. Please try again.",
@@ -122,24 +141,20 @@ export default function EditUsernameForm({
       return;
     }
 
-    try {
-      await authClient.updateUser({
-        username: username.toLowerCase(),
-        displayUsername: username,
-        fetchOptions: {
-          onSuccess: () => {
-            toast.success("Username updated successfully!");
-            form.reset();
-            router.refresh();
-          },
-          onError: (ctx) => {
-            toast.error(ctx.error.message || "Failed to update username");
-          },
-        },
-      });
-    } catch {
-      toast.error("Failed to update username");
+    const { error } = await authClient.updateUser({
+      username: username.toLowerCase(),
+      displayUsername: username,
+    });
+
+    if (error) {
+      toast.error(error.message || "Failed to update username");
+      return;
     }
+
+    toast.success("Username updated successfully!");
+    form.reset();
+    router.refresh();
+    router.push("/");
   }
 
   const getStatusIcon = () => {
@@ -184,6 +199,8 @@ export default function EditUsernameForm({
   const isCurrentUsername =
     watchedUsername?.toLowerCase() === currentUsername?.toLowerCase();
 
+  const statusIcon = getStatusIcon();
+
   const handleSuggestionClick = (suggestion: string) => {
     form.setValue("username", suggestion);
     form.trigger("username");
@@ -211,9 +228,9 @@ export default function EditUsernameForm({
                       {...field}
                       className="pr-10 pl-8"
                     />
-                    {getStatusIcon() && (
+                    {statusIcon && (
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        {getStatusIcon()}
+                        {statusIcon}
                       </div>
                     )}
                   </div>

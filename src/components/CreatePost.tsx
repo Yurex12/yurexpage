@@ -8,39 +8,49 @@ import CreatePostDialog from "./CreatePostDialog";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
 import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
-import { Image } from "@/types/types";
-import { useRouter } from "next/navigation";
+import { postSchema, TPostSchema } from "@/lib/schemas/postSchema";
 import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 
 export default function CreatePost({ className }: ComponentProps<"div">) {
   const [openPostDialog, setOpenPostDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
-  const [text, setText] = useState("");
-  const [images, setImages] = useState<Image[]>([]);
 
   const router = useRouter();
 
   const handleConfirmationDialog = () =>
     setOpenConfirmationDialog((open) => !open);
 
+  const form = useForm<TPostSchema>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      content: "",
+      images: [],
+    },
+  });
+
+  const { images, content } = form.watch();
+
   function handlePostDialog() {
     if (openPostDialog === true) {
-      if (text.trim() || images.length) {
+      if (content.trim() || images.length) {
         setOpenConfirmationDialog(true);
       } else {
-        setText("");
+        form.reset();
         setOpenPostDialog(false);
       }
       return;
     }
+    form.reset();
     setOpenPostDialog(true);
   }
 
   function handleLeavePost() {
     setOpenConfirmationDialog(false);
     setOpenPostDialog(false);
-    setText("");
-    setImages([]);
+    form.reset();
   }
 
   function handleImageUpload() {
@@ -78,16 +88,12 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
             </button>
 
             <DialogContent
-              className="flex max-h-10/12 flex-col border-0 p-4 outline-0"
+              className="flex max-h-10/12 flex-col p-4 outline-0"
               showCloseButton={false}
             >
               <DialogTitle className="sr-only">Post Modal</DialogTitle>
-              <CreatePostDialog
-                text={text}
-                setText={setText}
-                images={images}
-                setImages={setImages}
-              />
+
+              <CreatePostDialog content={content} images={images} form={form} />
             </DialogContent>
           </Dialog>
           {/* Image Upload Icon */}
@@ -101,8 +107,9 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
             <input
               id="upload-image"
               type="file"
+              multiple
+              accept="image/jpeg,image/jpg,image/png,image/webp"
               className="hidden"
-              accept="multiple"
             />
           </button>
         </div>

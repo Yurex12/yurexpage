@@ -137,4 +137,5 @@ export const notifications = [
 
 export const MIN_USERNAME_LENGTH = 4;
 export const MAX_USERNAME_LENGTH = 15;
-export const USERNAME_AVAILABILITY_DEBOUNCE = 500; // ms
+
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;

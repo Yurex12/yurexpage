@@ -1,17 +1,16 @@
 "use server";
 
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "@/constants";
 import { prisma } from "../prisma";
 
 export async function existingUser(username: string) {
   try {
-    // Normalize username for consistent checking
     const normalizedUsername = username.toLowerCase().trim();
 
-    // Validate input server-side as well
     if (
       !normalizedUsername ||
-      normalizedUsername.length < 4 ||
-      normalizedUsername.length > 15
+      normalizedUsername.length < MIN_USERNAME_LENGTH ||
+      normalizedUsername.length > MAX_USERNAME_LENGTH
     ) {
       return {
         success: false,
@@ -28,16 +27,11 @@ export async function existingUser(username: string) {
       };
     }
 
-    // Check both normalized username and display username
-    // This ensures uniqueness across both fields
     const userExist = await prisma.user.findFirst({
       where: {
-        OR: [
-          { username: normalizedUsername },
-          { displayUsername: username }, // Check original case too
-        ],
+        OR: [{ username: normalizedUsername }, { displayUsername: username }],
       },
-      select: { id: true }, // Only select ID for efficiency
+      select: { id: true },
     });
 
     if (userExist) {
@@ -53,8 +47,7 @@ export async function existingUser(username: string) {
       available: true,
       message: `"${username}" is available!`,
     };
-  } catch (error) {
-    console.error("Username availability check error:", error);
+  } catch {
     return {
       success: false,
       available: false,

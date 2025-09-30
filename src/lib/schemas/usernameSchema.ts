@@ -1,3 +1,4 @@
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "@/constants";
 import z from "zod";
 
 export const usernameSchema = z.object({
@@ -6,17 +7,17 @@ export const usernameSchema = z.object({
     .trim()
     .superRefine((val, ctx) => {
       if (!val) return;
-      if (val.length < 4) {
+      if (val.length < MIN_USERNAME_LENGTH) {
         ctx.addIssue({
           code: "custom",
-          message: "username must be at least 4 characters.",
+          message: `username must be at least ${MIN_USERNAME_LENGTH} characters.`,
         });
       }
 
-      if (val.length > 15) {
+      if (val.length > MAX_USERNAME_LENGTH) {
         ctx.addIssue({
           code: "custom",
-          message: "username should not be more than 15 characters.",
+          message: `username should not be more than ${MAX_USERNAME_LENGTH} character.`,
         });
       }
 

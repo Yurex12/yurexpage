@@ -8,6 +8,7 @@ import { signupSchemaWithoutConfirmPassword } from "./schemas/authSchemas";
 import { generateUsername } from "./username";
 
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "@/constants";
 
 const prisma = new PrismaClient();
 
@@ -88,7 +89,13 @@ export const auth = betterAuth({
       }
     }),
   },
-  plugins: [username(), nextCookies()],
+  plugins: [
+    username({
+      minUsernameLength: MIN_USERNAME_LENGTH,
+      maxUsernameLength: MAX_USERNAME_LENGTH,
+    }),
+    nextCookies(),
+  ],
 });
 
 export type Session = typeof auth.$Infer.Session;

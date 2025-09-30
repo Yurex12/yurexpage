@@ -8,19 +8,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum NotificationStatus {
+  READ
+  UNREAD
+}
+
+enum NotificationType {
+  LIKE_POST
+  COMMENT
+}
+
 model User {
-  id              String    @id
+  id              String  @id
   name            String
   email           String
-  emailVerified   Boolean   @default(false)
+  emailVerified   Boolean @default(false)
   image           String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @default(now()) @updatedAt
-  username        String    @db.VarChar(15)
+  username        String  @db.VarChar(15)
   displayUsername String
   bio             String?
-  sessions        Session[]
-  accounts        Account[]
+
+  notifications          Notification[] @relation("UserNotifications")
+  triggeredNotifications Notification[] @relation("TriggeredNotifications")
+  posts                  Post[]
+  postLikes              PostLike[]
+  postComments           Comment[]
+  postImages             Image[]
+  commentLikes           CommentLike[]
+
+  sessions Session[]
+  accounts Account[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([email])
   @@unique([username])
@@ -71,4 +91,94 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model Post {
+  id        String     @id @default(cuid())
+  userId    String
+  content   String     @db.Text
+  comments  Comment[]
+  postLikes PostLike[]
+  images    Image[]
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Notification {
+  id            String             @id @default(cuid())
+  triggerUserId String
+  content       String
+  userId        String
+  type          NotificationType
+  status        NotificationStatus @default(UNREAD)
+
+  user        User @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  triggerUser User @relation("TriggeredNotifications", fields: [triggerUserId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([triggerUserId])
+}
+
+model Comment {
+  id           String        @id @default(cuid())
+  content      String        @db.Text
+  postId       String
+  userId       String
+  commentLikes CommentLike[]
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+}
+
+model Image {
+  id     String @id @default(cuid())
+  url    String
+  userId String
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([postId])
+  @@index([userId])
+}
+
+model PostLike {
+  id     String @id @default(cuid())
+  postId String
+  userId String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([postId, userId])
+  @@index([postId])
+}
+
+model CommentLike {
+  id        String @id @default(cuid())
+  commentId String
+  userId    String
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
+  @@index([commentId])
 }

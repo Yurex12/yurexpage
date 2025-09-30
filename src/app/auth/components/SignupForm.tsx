@@ -47,7 +47,7 @@ export default function SignupForm() {
     } else {
       toast.success("Registration successful");
       form.reset();
-      router.push("/");
+      router.push("/setup/username");
     }
   }
 

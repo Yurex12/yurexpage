@@ -1,3 +1,4 @@
+import { User } from "@/lib/auth";
 import { LucideProps } from "lucide-react";
 import {
   Dispatch,
@@ -29,3 +30,8 @@ export type CreatePostDialogProps = {
 };
 
 export type Tab = ["posts", "images"];
+
+export type EditUsernameFormProps = {
+  showSkipOption?: boolean;
+  user: User;
+};
