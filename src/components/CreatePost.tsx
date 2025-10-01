@@ -4,7 +4,6 @@ import { ComponentProps, useState } from "react";
 import { ImageIcon } from "lucide-react";
 
 import ConfirmAction from "./ConfirmAction";
-import CreatePostDialog from "./CreatePostDialog";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 
 import { MOBILE_DEVICE_BREAKPOINT } from "@/constants";
@@ -12,7 +11,9 @@ import { postSchema, TPostSchema } from "@/lib/schemas/postSchema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
+import CreatePostForm from "./CreatePostForm";
+import CreatePostHeader from "./CreatePostHeader";
 
 export default function CreatePost({ className }: ComponentProps<"div">) {
   const [openPostDialog, setOpenPostDialog] = useState(false);
@@ -25,13 +26,15 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
 
   const form = useForm<TPostSchema>({
     resolver: zodResolver(postSchema),
+    mode: "onChange",
     defaultValues: {
       content: "",
       images: [],
     },
   });
 
-  const { images, content } = form.watch();
+  const content = useWatch({ control: form.control, name: "content" });
+  const images = useWatch({ control: form.control, name: "images" });
 
   function handlePostDialog() {
     if (openPostDialog === true) {
@@ -92,8 +95,8 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
               showCloseButton={false}
             >
               <DialogTitle className="sr-only">Post Modal</DialogTitle>
-
-              <CreatePostDialog content={content} images={images} form={form} />
+              <CreatePostHeader />
+              <CreatePostForm form={form} />
             </DialogContent>
           </Dialog>
           {/* Image Upload Icon */}

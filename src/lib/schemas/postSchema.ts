@@ -8,23 +8,28 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-export const postSchema = z.object({
-  content: z
-    .string()
-    .trim()
-    .max(1000, "Content should not be more than 1000 characters"),
+export const postSchema = z
+  .object({
+    content: z
+      .string()
+      .trim()
+      .max(1000, "Content should not be more than 1000 characters"),
 
-  images: z
-    .array(z.instanceof(File))
-    .max(2, "Maximum 2 images are allowed")
-    .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE), {
-      message: "Each file should be less than 5MB",
-    })
-    .refine(
-      (files) =>
-        files.every((file) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
-      { message: "Only JPEG, PNG, and WebP images are allowed" },
-    ),
-});
+    images: z
+      .array(z.instanceof(File))
+      .max(2, "Maximum 2 images are allowed")
+      .refine((files) => files.every((file) => file.size <= MAX_FILE_SIZE), {
+        message: "Each file should be less than 5MB",
+      })
+      .refine(
+        (files) =>
+          files.every((file) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
+        { message: "Only JPEG, PNG, and WebP images are allowed" },
+      ),
+  })
+  .refine((data) => data.content.trim().length || data.images.length, {
+    error: "Please provide either content or at least one image",
+    // path: ["content"],
+  });
 
 export type TPostSchema = z.infer<typeof postSchema>;

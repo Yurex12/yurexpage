@@ -96,7 +96,7 @@ model Verification {
 model Post {
   id        String     @id @default(cuid())
   userId    String
-  content   String     @db.Text
+  content   String?    @db.Text
   comments  Comment[]
   postLikes PostLike[]
   images    Image[]
