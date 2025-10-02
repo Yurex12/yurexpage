@@ -5,6 +5,7 @@ import CreatePostForm from "./CreatePostForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postSchema, TPostSchema } from "@/lib/schemas/postSchema";
 import { MouseEvent, RefObject } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreatePostBox() {
   const form = useForm<TPostSchema>({
@@ -16,12 +17,16 @@ export default function CreatePostBox() {
     },
   });
 
+  const router = useRouter();
+
   function handleFocus(
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     el: RefObject<HTMLTextAreaElement | null>,
   ) {
     if (e.target === e.currentTarget) el.current?.focus();
   }
+
+  const handlePostUploadSuccess = () => router.push("/");
 
   return (
     <div className="mt-2 flex h-11/12 flex-col gap-y-2 px-4 sm:px-8">
@@ -30,7 +35,8 @@ export default function CreatePostBox() {
       <CreatePostForm
         containerClassName="rounded-md border border-slate-300 p-2 cursor-text"
         form={form}
-        handleFocus={handleFocus}
+        onFocus={handleFocus}
+        onPostUploadSuccess={handlePostUploadSuccess}
       />
     </div>
   );

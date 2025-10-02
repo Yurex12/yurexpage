@@ -1,3 +1,4 @@
+import { ImageUploadResponse } from "@/types/types";
 import {
   ImageKitAbortError,
   ImageKitInvalidRequestError,
@@ -17,12 +18,7 @@ export async function uploadImages(images: File[]) {
         authParams = await authenticator();
       } catch (authError) {
         console.error("Failed to authenticate for upload:", authError);
-        return {
-          success: false,
-          message: "Images uploading failed",
-          data: null,
-          error: authError,
-        };
+        throw new Error("Image upload failed");
       }
 
       const { signature, expire, token, publicKey } = authParams;
@@ -39,11 +35,19 @@ export async function uploadImages(images: File[]) {
       });
     });
 
-    const uploadResponses = await Promise.all(uploadPromises);
+    const uploadResponses: ImageUploadResponse[] = (
+      await Promise.all(uploadPromises)
+    ).map((res) => ({
+      fileId: res.fileId!,
+      name: res.name!,
+      url: res.url!,
+    }));
+
+    console.log(uploadResponses);
 
     return {
       success: true,
-      message: "Images uploaded successfully",
+      message: "All images uploaded successfully",
       data: uploadResponses,
       error: null,
     };

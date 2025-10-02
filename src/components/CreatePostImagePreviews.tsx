@@ -5,9 +5,11 @@ import { MAX_IMAGE_SIZE } from "@/constants";
 
 export default function CreatePostImagePreviews({
   images,
+  disabled,
   removeImage,
 }: {
   images: File[];
+  disabled: boolean;
   removeImage: (file: File) => void;
 }) {
   if (images.length === 0) return null;
@@ -43,8 +45,9 @@ export default function CreatePostImagePreviews({
 
             <button
               onClick={() => removeImage(image)}
-              className="absolute top-2 right-2 rounded-full bg-black/60 p-1.5 text-white hover:bg-black/80"
+              className="absolute top-2 right-2 rounded-full bg-black/60 p-1.5 text-white hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-black/60"
               type="button"
+              disabled={disabled}
             >
               <X className="size-4" />
             </button>

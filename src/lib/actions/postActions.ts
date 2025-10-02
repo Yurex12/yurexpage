@@ -1,11 +1,11 @@
 "use server";
 
 import z from "zod";
-import { postSchema, TPostSchema } from "../schemas/postSchema";
 import { prisma } from "../prisma";
+import { serverPostSchema, TServerPostSchema } from "../schemas/postSchema";
 
-export async function createPost(data: TPostSchema, userId: string) {
-  const validateFields = postSchema.safeParse(data);
+export async function createPost(data: TServerPostSchema, userId: string) {
+  const validateFields = serverPostSchema.safeParse(data);
 
   if (!validateFields.success) {
     return {
@@ -18,13 +18,22 @@ export async function createPost(data: TPostSchema, userId: string) {
 
   const { content, images } = validateFields.data;
 
+  const processedImage = images.length
+    ? images.map((image) => ({
+        userId,
+        url: image.url,
+        fileId: image.fileId,
+        name: image.name,
+      }))
+    : [];
+
   try {
     const newPost = await prisma.post.create({
       data: {
         content,
         images: {
           createMany: {
-            data: [],
+            data: processedImage,
           },
         },
         user: {

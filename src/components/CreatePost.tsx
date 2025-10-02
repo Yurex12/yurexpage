@@ -11,7 +11,7 @@ import { postSchema, TPostSchema } from "@/lib/schemas/postSchema";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CreatePostForm from "./CreatePostForm";
 import CreatePostHeader from "./CreatePostHeader";
 
@@ -24,6 +24,8 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
   const handleConfirmationDialog = () =>
     setOpenConfirmationDialog((open) => !open);
 
+  const closePostDialog = () => setOpenPostDialog(false);
+
   const form = useForm<TPostSchema>({
     resolver: zodResolver(postSchema),
     mode: "onChange",
@@ -33,11 +35,14 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
     },
   });
 
-  const content = useWatch({ control: form.control, name: "content" });
-  const images = useWatch({ control: form.control, name: "images" });
+  const isSubmitting = form.formState.isSubmitting;
+
+  const images = form.watch("images");
+  const content = form.watch("content");
 
   function handlePostDialog() {
     if (openPostDialog === true) {
+      if (isSubmitting) return;
       if (content.trim() || images.length) {
         setOpenConfirmationDialog(true);
       } else {
@@ -56,9 +61,9 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
     form.reset();
   }
 
-  function handleImageUpload() {
-    setOpenPostDialog(true);
-  }
+  // function handleImageUpload() {
+  //   setOpenPostDialog(true);
+  // }
 
   function handleCreatePost() {
     if (window.innerWidth > MOBILE_DEVICE_BREAKPOINT) handlePostDialog();
@@ -93,16 +98,20 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
             <DialogContent
               className="flex max-h-10/12 flex-col p-4 outline-0"
               showCloseButton={false}
+              aria-describedby={undefined}
             >
               <DialogTitle className="sr-only">Post Modal</DialogTitle>
-              <CreatePostHeader />
-              <CreatePostForm form={form} />
+              <CreatePostHeader disabled={isSubmitting} />
+              <CreatePostForm
+                form={form}
+                onPostUploadSuccess={closePostDialog}
+              />
             </DialogContent>
           </Dialog>
           {/* Image Upload Icon */}
           <button
             className="cursor-pointer text-gray-500 transition hover:text-blue-600"
-            onClick={handleImageUpload}
+            // onClick={handleImageUpload}
           >
             <label htmlFor="upload-image" className="cursor-pointer">
               <ImageIcon className="h-full" />

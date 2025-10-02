@@ -27,9 +27,39 @@ export const postSchema = z
         { message: "Only JPEG, PNG, and WebP images are allowed" },
       ),
   })
-  .refine((data) => data.content.trim().length || data.images.length, {
-    error: "Please provide either content or at least one image",
-    // path: ["content"],
-  });
+  .refine(
+    (data) =>
+      Boolean(data.content.trim().length) || Boolean(data.images.length),
+    {
+      error: "Please provide either content or at least one image",
+      // path: ["content"],
+    },
+  );
+
+export const serverPostSchema = z
+  .object({
+    content: z
+      .string()
+      .trim()
+      .max(1000, "Content should not be more than 1000 characters"),
+
+    images: z
+      .array(
+        z.object({
+          fileId: z.string(),
+          name: z.string(),
+          url: z.url(),
+        }),
+      )
+      .max(2, "Maximum 2 images are allowed"),
+  })
+  .refine(
+    (data) =>
+      Boolean(data.content.trim().length) || Boolean(data.images.length),
+    {
+      error: "Please provide either content or at least one image",
+    },
+  );
 
 export type TPostSchema = z.infer<typeof postSchema>;
+export type TServerPostSchema = z.infer<typeof serverPostSchema>;

@@ -35,3 +35,9 @@ export type EditUsernameFormProps = {
   showSkipOption?: boolean;
   user: User;
 };
+
+export type ImageUploadResponse = {
+  fileId: string;
+  name: string;
+  url: string;
+};

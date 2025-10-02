@@ -3,9 +3,11 @@ import { RefObject } from "react";
 
 export default function ImageUploader({
   imagesLength,
+  disabled,
   inputRef,
 }: {
   imagesLength: number;
+  disabled: boolean;
   inputRef: RefObject<HTMLInputElement | null>;
 }) {
   return (
@@ -19,7 +21,7 @@ export default function ImageUploader({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        disabled={!(imagesLength < 2)}
+        disabled={!(imagesLength < 2) || disabled}
         className="flex items-center space-x-1 rounded-lg bg-blue-100 px-3 py-1.5 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-400 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-blue-100"
       >
         <Plus className="h-4 w-4" />

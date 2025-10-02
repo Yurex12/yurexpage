@@ -18,36 +18,55 @@ import { Send } from "lucide-react";
 
 import { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 
-import { useClientSession } from "@/hooks/useClientAuth";
+import { useClientSession } from "@/hooks/useClientSession";
 import { createPost } from "@/lib/actions/postActions";
 import toast from "react-hot-toast";
 import CreatePostImagePreviews from "./CreatePostImagePreviews";
 import ImageUploader from "./ImageUploader";
 import { uploadImages } from "@/lib/api/uploadImages";
+import MiniSpinner from "./MiniSpinner";
 
 export default function CreatePostForm({
   form,
-  handleFocus,
+  onFocus,
+  onPostUploadSuccess,
   containerClassName,
 }: {
   containerClassName?: string;
+  onPostUploadSuccess: VoidFunction;
   form: UseFormReturn<TPostSchema>;
-  handleFocus?: (
+  onFocus?: (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
     el: RefObject<HTMLTextAreaElement | null>,
   ) => void;
 }) {
+  const { user, isPending, isAuthenticated } = useClientSession();
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const content = form.watch("content");
-  const images = form.watch("images");
 
   useEffect(() => {
     textareaRef.current?.focus();
   }, []);
 
-  const { data } = useClientSession();
+  if (isPending) {
+    return (
+      <div className="p-8">
+        <MiniSpinner text="Loading..." />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <div className="p-4">Redirecting to sign in...</div>;
+  }
+
+  const userId = user!.id;
+
+  const content = form.watch("content");
+  const images = form.watch("images");
+
+  const isSubmitting = form.formState.isSubmitting;
 
   function handleAutoResizeTextarea() {
     const el = textareaRef.current;
@@ -95,24 +114,36 @@ export default function CreatePostForm({
     form.trigger("images");
   }
 
-  async function onSubmit(postData: TPostSchema) {
-    console.log(postData);
+  async function onSubmit({ content, images }: TPostSchema) {
+    const toastId = toast.loading("Uploading your post...", {
+      duration: Infinity,
+    });
 
-    await uploadImages(postData.images);
+    let imagesUploadRes;
+    if (images.length) {
+      imagesUploadRes = await uploadImages(images);
+      if (!imagesUploadRes.success) {
+        toast.error("Post could not be uploaded, try again", {
+          id: toastId,
+          duration: 3000,
+        });
+        return;
+      }
+    }
 
-    // const res = await createPost(postData, data?.user.id as string);
+    const res = await createPost(
+      { content: content, images: imagesUploadRes?.data || [] },
+      userId,
+    );
 
-    console.log("hi");
-
-    // console.log(res);
-
-    // if (res.success) {
-    //   toast.success(res.message);
-    // } else {
-    //   toast.error(res.message);
-    // }
-
-    // textareaRef.current!.style.height = "auto";
+    if (res.success) {
+      toast.success(res.message, { id: toastId, duration: 3000 });
+      form.reset();
+      setTimeout(() => onPostUploadSuccess(), 50);
+    } else {
+      toast.error(res.message, { id: toastId, duration: 3000 });
+    }
+    console.log(res);
   }
 
   return (
@@ -123,7 +154,7 @@ export default function CreatePostForm({
       >
         <div
           className={`flex-1 overflow-y-auto ${containerClassName}`}
-          onClick={(e) => handleFocus?.(e, textareaRef)}
+          onClick={(e) => onFocus?.(e, textareaRef)}
         >
           <FormField
             control={form.control}
@@ -139,14 +170,19 @@ export default function CreatePostForm({
                     }}
                     ref={mergeRefs(field.ref, textareaRef)}
                     placeholder="What's on your mind?"
-                    className="w-full resize-none bg-transparent leading-relaxed font-normal text-gray-900 outline-none placeholder:text-gray-500"
+                    className="w-full resize-none bg-transparent leading-relaxed font-normal text-gray-900 outline-none placeholder:text-gray-500 disabled:cursor-not-allowed disabled:opacity-50"
                     rows={1}
+                    disabled={isSubmitting}
                   />
                 </FormControl>
               </FormItem>
             )}
           />
-          <CreatePostImagePreviews images={images} removeImage={removeImage} />
+          <CreatePostImagePreviews
+            images={images}
+            removeImage={removeImage}
+            disabled={isSubmitting}
+          />
         </div>
 
         <FormField
@@ -167,7 +203,11 @@ export default function CreatePostForm({
                 />
               </FormControl>
 
-              <ImageUploader imagesLength={images.length} inputRef={inputRef} />
+              <ImageUploader
+                imagesLength={images.length}
+                inputRef={inputRef}
+                disabled={isSubmitting}
+              />
 
               <FormMessage />
             </FormItem>
@@ -187,12 +227,21 @@ export default function CreatePostForm({
             type="submit"
             disabled={
               (!content.trim() && images.length === 0) ||
-              !form.formState.isValid
+              !form.formState.isValid ||
+              isSubmitting
             }
             className="flex w-24 items-center gap-x-2 rounded-lg bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 font-medium text-white shadow-md transition-all duration-300 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Send className="size-4" />
-            <span className="text-md">Post</span>
+            {!isSubmitting ? (
+              <>
+                <Send className="size-4" />
+                <span className="text-md">Post</span>
+              </>
+            ) : (
+              <>
+                <MiniSpinner text="Posting..." />
+              </>
+            )}
           </Button>
         </div>
       </form>
