@@ -51,7 +51,6 @@ export default function CreatePost({ className }: ComponentProps<"div">) {
       }
       return;
     }
-    form.reset();
     setOpenPostDialog(true);
   }
 

@@ -3,6 +3,7 @@
 import z from "zod";
 import { prisma } from "../prisma";
 import { serverPostSchema, TServerPostSchema } from "../schemas/postSchema";
+import { revalidatePath } from "next/cache";
 
 export async function createPost(data: TServerPostSchema, userId: string) {
   const validateFields = serverPostSchema.safeParse(data);
@@ -44,6 +45,8 @@ export async function createPost(data: TServerPostSchema, userId: string) {
       },
     });
 
+    // revalidatePath("/");
+
     return {
       success: true,
       data: newPost,
@@ -58,6 +61,73 @@ export async function createPost(data: TServerPostSchema, userId: string) {
       data: null,
       error,
       message: "Post could not be created.",
+    };
+  }
+}
+
+export async function deletePost({
+  userId,
+  postId,
+}: {
+  userId: string;
+  postId: string;
+}) {
+  if (!userId || !postId) {
+    return {
+      success: false,
+      data: null,
+      error: "Invalid request, pass required fields.",
+      message: "Post could not be deleted.",
+    };
+  }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return {
+        success: false,
+        data: null,
+        error: "Post not found",
+        message: "Post does not exist.",
+      };
+    }
+
+    if (post.userId !== userId) {
+      return {
+        success: false,
+        data: null,
+        error: "unauthorized",
+        message: "You are not authorized to delete this post.",
+      };
+    }
+
+    const deletedPost = await prisma.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+
+    revalidatePath("/");
+
+    return {
+      success: true,
+      message: `Post with id #${postId} deleted successfully.`,
+      data: deletedPost,
+      error: null,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      data: null,
+      error,
+      message: "Post could not be deleted",
     };
   }
 }

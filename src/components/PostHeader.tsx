@@ -1,3 +1,4 @@
+"use client";
 import PostDropdownActions from "./PostDropdownActions";
 
 export default function PostHeader() {

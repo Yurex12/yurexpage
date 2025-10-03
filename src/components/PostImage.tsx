@@ -1,17 +1,18 @@
-'use client';
-import { useState } from 'react';
-import 'yet-another-react-lightbox/styles.css';
-import Lightbox from 'yet-another-react-lightbox';
+"use client";
+import { useState } from "react";
+import "yet-another-react-lightbox/styles.css";
+import Lightbox from "yet-another-react-lightbox";
+import { ImageUploadResponse } from "@/types/types";
 
-type ImageGridProps = {
-  images: { src: string }[];
-};
-
-export default function PostImage({ images }: ImageGridProps) {
-  const imageLength = images.length;
-
+export default function PostImage({
+  images,
+}: {
+  images: ImageUploadResponse[];
+}) {
   const [open, setOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
+
+  const imageLength = images.length;
 
   const handleOpen = (index: number) => {
     setPhotoIndex(index);
@@ -20,18 +21,19 @@ export default function PostImage({ images }: ImageGridProps) {
   return (
     <>
       <div
-        className={`w-full mx-auto grid grid-cols-1 mt-2  ${
-          imageLength > 1 ? 'grid-cols-2 gap-x-0.5' : ''
+        className={`mx-auto mt-2 grid w-full grid-cols-1 ${
+          imageLength > 1 ? "grid-cols-2 gap-x-0.5" : ""
         }`}
       >
         {images.map((image, i) => (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={image.src}
-            alt=''
-            className={`object-cover rounded-sm w-full ${
-              images.length > 1 ? 'h-80' : 'h-auto'
+            src={image.url}
+            alt={image.name}
+            className={`w-full rounded-sm object-cover ${
+              images.length > 1 ? "h-80" : "h-auto"
             }`}
-            key={image.src}
+            key={image.fileId}
             onClick={(e) => {
               e.stopPropagation();
               handleOpen(i);
@@ -48,7 +50,7 @@ export default function PostImage({ images }: ImageGridProps) {
         controller={{ closeOnBackdropClick: true, closeOnPullDown: true }}
         styles={{
           container: {
-            backgroundColor: 'rgba(0, 0, 0, 0.99)',
+            backgroundColor: "rgba(0, 0, 0, 0.99)",
           },
         }}
       />

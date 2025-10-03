@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { ThumbsUp } from 'lucide-react';
-import { ReactNode, useState } from 'react';
+import { ThumbsUp } from "lucide-react";
+import { ReactNode, useState } from "react";
 
 function PostInteractions({
   children,
@@ -15,10 +15,10 @@ function PostInteractions({
     <div className={`flex items-center ${className}`}>
       <button
         onClick={() => setLiked(!liked)}
-        className={`w-1/2 py-2 flex items-center justify-center hover:bg-gray-100 text-muted-foreground rounded-md space-x-2`}
+        className={`text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100`}
       >
-        <ThumbsUp className={`w-5 h-5 ${liked ? 'fill-blue-500' : ''}`} />
-        <span className='text-sm'>Like</span>
+        <ThumbsUp className={`h-5 w-5 ${liked ? "fill-blue-500" : ""}`} />
+        <span className="text-sm">Like</span>
       </button>
 
       {children}

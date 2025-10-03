@@ -1,25 +1,25 @@
-"use client";
-
-import { useScrollRestoration } from "@/hooks/useScrollRestoration";
-import CreatePost from "./CreatePost";
-import Post from "./Post";
-import { ComponentProps } from "react";
 import { cn } from "@/lib/utils";
+import { ComponentProps, Suspense } from "react";
+import CreatePost from "./CreatePost";
+import PostsList from "./PostsList";
 
 export default function Posts({ className }: ComponentProps<"div">) {
-  const ref = useScrollRestoration<HTMLDivElement>();
+  // const ref = useScrollRestoration<HTMLDivElement>();
 
   return (
     <div
       className={cn("flex-1 space-y-2 pb-4 sm:space-y-4", className)}
-      ref={ref}
+      // ref={ref}
     >
       <CreatePost className="w-full max-w-140" />
-      <div className="space-y-2 sm:space-y-4">
+      {/* <div className="space-y-2 sm:space-y-4">
         {[1, 2, 3, 4].map((num) => (
           <Post key={num} />
         ))}
-      </div>
+      </div> */}
+      <Suspense fallback={<p>Loading...</p>}>
+        <PostsList />
+      </Suspense>
     </div>
   );
 }

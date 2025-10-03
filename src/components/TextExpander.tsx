@@ -1,7 +1,7 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
-import { DESKTOP_BREAKPOINT } from '@/constants';
+import { DESKTOP_BREAKPOINT } from "@/constants";
 
 export default function TextExpander({
   text,
@@ -14,7 +14,7 @@ export default function TextExpander({
 
   if (!text?.trim()) return null;
 
-  const words = text.trim().split(' ');
+  const words = text.trim().split(" ");
   const wordLimit = 30;
   const isLong = words.length > wordLimit;
 
@@ -32,14 +32,14 @@ export default function TextExpander({
       {isLong
         ? showFullText
           ? text
-          : words.slice(0, wordLimit).join(' ') + '... '
+          : words.slice(0, wordLimit).join(" ") + "... "
         : text}
       {isLong && (
         <span
-          className='text-blue-400 underline cursor-pointer italic ml-1'
+          className="ml-1 cursor-pointer text-blue-400 italic underline"
           onClick={() => setShowFullText(true)}
         >
-          {!showFullText && 'show more'}
+          {!showFullText && "show more"}
         </span>
       )}
     </p>

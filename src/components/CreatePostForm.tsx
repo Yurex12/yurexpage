@@ -25,6 +25,7 @@ import CreatePostImagePreviews from "./CreatePostImagePreviews";
 import ImageUploader from "./ImageUploader";
 import { uploadImages } from "@/lib/api/uploadImages";
 import MiniSpinner from "./MiniSpinner";
+import { useRouter } from "next/navigation";
 
 export default function CreatePostForm({
   form,
@@ -44,6 +45,8 @@ export default function CreatePostForm({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     textareaRef.current?.focus();
@@ -137,11 +140,12 @@ export default function CreatePostForm({
     );
 
     if (res.success) {
-      toast.success(res.message, { id: toastId, duration: 3000 });
+      toast.success(res.message, { id: toastId, duration: 2000 });
+      onPostUploadSuccess();
       form.reset();
-      setTimeout(() => onPostUploadSuccess(), 50);
+      router.refresh();
     } else {
-      toast.error(res.message, { id: toastId, duration: 3000 });
+      toast.error(res.message, { id: toastId, duration: 2000 });
     }
     console.log(res);
   }
