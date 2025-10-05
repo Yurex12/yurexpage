@@ -1,18 +1,17 @@
 "use client";
+import { usePost } from "@/contexts/PostContext";
 import { useState } from "react";
-import "yet-another-react-lightbox/styles.css";
 import Lightbox from "yet-another-react-lightbox";
-import { ImageUploadResponse } from "@/types/types";
+import "yet-another-react-lightbox/styles.css";
 
-export default function PostImage({
-  images,
-}: {
-  images: ImageUploadResponse[];
-}) {
+export default function PostImage() {
+  const { images } = usePost();
   const [open, setOpen] = useState(false);
   const [photoIndex, setPhotoIndex] = useState(0);
 
   const imageLength = images.length;
+
+  if (!imageLength) return null;
 
   const handleOpen = (index: number) => {
     setPhotoIndex(index);

@@ -2,19 +2,15 @@
 import { useState } from "react";
 
 import { DESKTOP_BREAKPOINT } from "@/constants";
+import { usePost } from "@/contexts/PostContext";
 
-export default function TextExpander({
-  text,
-  className,
-}: {
-  text: string;
-  className?: string;
-}) {
+export default function TextExpander({ className }: { className?: string }) {
+  const { content } = usePost();
   const [showFullText, setShowFullText] = useState(false);
 
-  if (!text?.trim()) return null;
+  if (!content?.trim()) return null;
 
-  const words = text.trim().split(" ");
+  const words = content.trim().split(" ");
   const wordLimit = 30;
   const isLong = words.length > wordLimit;
 
@@ -31,12 +27,12 @@ export default function TextExpander({
     >
       {isLong
         ? showFullText
-          ? text
+          ? content
           : words.slice(0, wordLimit).join(" ") + "... "
-        : text}
+        : content}
       {isLong && (
         <span
-          className="ml-1 cursor-pointer text-blue-400 italic underline"
+          className="content-blue-400 ml-1 cursor-pointer italic underline"
           onClick={() => setShowFullText(true)}
         >
           {!showFullText && "show more"}

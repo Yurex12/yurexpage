@@ -50,7 +50,7 @@ export default function EngagementActions() {
   return (
     <div className="space-y-2 px-4">
       {/* Actions */}
-      <PostInteractions>
+      <PostInteractions postId={postId}>
         <Dialog open={openCommentDialog} onOpenChange={handleCommentDialog}>
           <button
             className="text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100"

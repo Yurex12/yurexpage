@@ -1,5 +1,8 @@
 import { User } from "@/lib/auth";
 import { LucideProps } from "lucide-react";
+
+import { Prisma } from "@/generated/prisma/client";
+
 import {
   Dispatch,
   ForwardRefExoticComponent,
@@ -41,3 +44,24 @@ export type ImageUploadResponse = {
   name: string;
   url: string;
 };
+
+export type PostWithRelations = Prisma.PostGetPayload<{
+  include: {
+    postLikes: true;
+    comments: true;
+    images: true;
+    user: {
+      select: {
+        name: true;
+        displayUsername: true;
+        image: true;
+      };
+    };
+    _count: {
+      select: {
+        comments: true;
+        postLikes: true;
+      };
+    };
+  };
+}>;

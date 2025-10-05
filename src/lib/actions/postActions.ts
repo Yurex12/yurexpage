@@ -131,3 +131,70 @@ export async function deletePost({
     };
   }
 }
+
+// Like post
+
+export async function likePost({
+  postId,
+  userId,
+}: {
+  postId: string;
+  userId: string;
+}) {
+  if (!userId || !postId) {
+    return {
+      success: false,
+      type: "error",
+      data: null,
+      error: "Invalid request, pass required fields.",
+      message: "could not like post",
+    };
+  }
+
+  try {
+    const existingLike = await prisma.postLike.findUnique({
+      where: {
+        postId_userId: { postId, userId },
+      },
+    });
+
+    let likedPost;
+    let type: "like" | "unlike";
+
+    if (!existingLike) {
+      likedPost = await prisma.postLike.create({
+        data: {
+          postId,
+          userId,
+        },
+      });
+      type = "like";
+    } else {
+      likedPost = await prisma.postLike.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+      type = "unlike";
+    }
+
+    return {
+      success: true,
+      error: null,
+      type,
+      data: likedPost,
+      message:
+        type === "like" ? "You liked this post." : "You unliked this post.",
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      data: null,
+      type: "error",
+      error,
+      message: "Could not like/unlike post",
+    };
+  }
+}
