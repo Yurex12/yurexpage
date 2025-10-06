@@ -1,9 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import z from "zod";
 import { prisma } from "../prisma";
 import { serverPostSchema, TServerPostSchema } from "../schemas/postSchema";
+import { revalidatePath } from "next/cache";
 
 export async function createPost(data: TServerPostSchema, userId: string) {
   const validateFields = serverPostSchema.safeParse(data);
@@ -84,8 +84,8 @@ export async function deletePost({
     return {
       success: false,
       data: null,
-      error: "Invalid request, pass required fields.",
-      message: "Post could not be deleted.",
+      error: "Post could not be deleted.",
+      message: "Invalid request, pass required fields.",
     };
   }
 
@@ -100,8 +100,8 @@ export async function deletePost({
       return {
         success: false,
         data: null,
-        error: "Post not found",
-        message: "Post does not exist.",
+        error: "POST_NOT_FOUND", // ✅ Specific error code
+        message: "This post is no longer available",
       };
     }
 
@@ -109,7 +109,7 @@ export async function deletePost({
       return {
         success: false,
         data: null,
-        error: "unauthorized",
+        error: "UNAUTHORIZED",
         message: "You are not authorized to delete this post.",
       };
     }
@@ -124,7 +124,7 @@ export async function deletePost({
 
     return {
       success: true,
-      message: `Post with id #${postId} deleted successfully.`,
+      message: `Post  deleted successfully.`,
       data: deletedPost,
       error: null,
     };
@@ -164,6 +164,20 @@ export async function likePost({
   }
 
   try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return {
+        success: false,
+        type: "error",
+        data: null,
+        error: "POST_NOT_FOUND",
+        message: "This post is no longer available",
+      };
+    }
+
     const existingLike = await prisma.postLike.findUnique({
       where: {
         postId_userId: { postId, userId },
@@ -171,12 +185,10 @@ export async function likePost({
     });
 
     let likedPost;
-    let type: "like" | "unlike" = "like";
+    let type: "LIKE" | "UNLIKE" = "LIKE";
 
     await prisma.$transaction(async (tx) => {
       if (!existingLike) {
-        type = "like";
-
         likedPost = await tx.postLike.create({
           data: { postId, userId },
         });
@@ -185,14 +197,16 @@ export async function likePost({
           data: { notificationId, userId },
         });
       } else {
-        type = "unlike";
+        type = "UNLIKE";
 
         likedPost = await tx.postLike.delete({
           where: { id: existingLike.id },
         });
 
-        await tx.notificationTrigger.deleteMany({
-          where: { userId, notificationId },
+        await tx.notificationTrigger.delete({
+          where: {
+            userId_notificationId: { userId, notificationId },
+          },
         });
       }
     });
@@ -203,7 +217,7 @@ export async function likePost({
       type,
       data: likedPost,
       message:
-        type === "like" ? "You liked this post." : "You unliked this post.",
+        type === "LIKE" ? "You liked this post." : "You unliked this post.",
     };
   } catch (error) {
     console.log(error);

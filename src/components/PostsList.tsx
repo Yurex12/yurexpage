@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import React from "react";
-import Post from "./Post";
+import { PostsProvider } from "@/contexts/PostsContext";
 import { getServerSession } from "@/lib/getServerSession";
+import { prisma } from "@/lib/prisma";
+import Posts from "./Posts";
 
 export default async function PostsList() {
   const { user } = await getServerSession();
@@ -42,16 +42,9 @@ export default async function PostsList() {
 
   if (!posts.length) return <p>No post found</p>;
 
-  // console.log(JSON.stringify(posts, null, 2));
-
-  //   console.log(posts);
-
   return (
-    <div className="space-y-2 sm:space-y-4">
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-        // <div key={post.id}>Hello</div>
-      ))}
-    </div>
+    <PostsProvider posts={posts}>
+      <Posts />
+    </PostsProvider>
   );
 }

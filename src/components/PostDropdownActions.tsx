@@ -1,6 +1,7 @@
 "use client";
 import { Copy, Edit, Ellipsis, Trash } from "lucide-react";
 
+import { usePosts } from "@/contexts/PostsContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +11,8 @@ import {
 import { usePost } from "@/contexts/PostContext";
 
 export default function PostDropdownActions() {
-  const { handleDeletePost } = usePost();
+  const { id: postId } = usePost();
+  const { handleDeletePost } = usePosts();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +38,7 @@ export default function PostDropdownActions() {
 
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-3 rounded-md border-0 px-3 py-2 text-sm text-red-600 outline-0 transition hover:bg-red-50"
-          onClick={handleDeletePost}
+          onClick={() => handleDeletePost(postId)}
         >
           <Trash className="h-4 w-4 text-red-500" />
           <span>Delete post</span>

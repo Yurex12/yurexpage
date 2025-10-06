@@ -1,3 +1,4 @@
+"use client";
 import { PostProvider } from "@/contexts/PostContext";
 import EngagementStats from "./EngagementStats";
 import PostHeader from "./PostHeader";

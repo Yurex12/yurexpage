@@ -3,6 +3,7 @@
 import { useClientSession } from "@/hooks/useClientSession";
 import { likePost } from "@/lib/actions/postActions";
 import { PostWithRelations } from "@/types/types";
+import { useRouter } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -16,7 +17,6 @@ import toast from "react-hot-toast";
 type PostProvider = PostWithRelations & {
   optimisticLike: boolean;
   handleLike: VoidFunction;
-  handleDeletePost: VoidFunction;
 };
 
 const postContext = createContext<PostProvider | undefined>(undefined);
@@ -32,6 +32,9 @@ export function PostProvider({
 
   const [isPending, startTransition] = useTransition();
   const { user } = useClientSession();
+
+  const router = useRouter();
+
   const [hasLiked, setHasLiked] = useState(postLikes.length > 0);
 
   const likeNotificationId = notifications.find(
@@ -57,21 +60,22 @@ export function PostProvider({
       });
 
       if (res.success) {
-        if (res.type === "like") {
+        if (res.type === "LIKE") {
           setHasLiked(true);
         }
-        if (res.type === "unlike") {
+        if (res.type === "UNLIKE") {
           setHasLiked(false);
         }
+      } else if (!res.success && res.error === "POST_NOT_FOUND") {
+        toast.error(res.message);
+        router.refresh();
       } else {
         toast.error("Something went wrong");
       }
     });
   }
 
-  async function handleDeletePost() {}
-
-  const value = { ...post, handleLike, optimisticLike, handleDeletePost };
+  const value = { ...post, handleLike, optimisticLike };
   return <postContext.Provider value={value}>{children}</postContext.Provider>;
 }
 

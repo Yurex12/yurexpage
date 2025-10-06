@@ -1,6 +1,6 @@
 import CoverPhoto from "@/components/CoverPhoto";
 import PageHeader from "@/components/PageHeader";
-import Posts from "@/components/Posts";
+import Posts from "@/components/PostsContainer";
 import ProfileDetails from "@/components/ProfileDetails";
 import ProfileInfo from "@/components/ProfileInfo";
 import Tab from "@/components/Tab";
