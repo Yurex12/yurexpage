@@ -1,9 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import z from "zod";
 import { prisma } from "../prisma";
 import { serverPostSchema, TServerPostSchema } from "../schemas/postSchema";
-import { revalidatePath } from "next/cache";
 
 export async function createPost(data: TServerPostSchema, userId: string) {
   const validateFields = serverPostSchema.safeParse(data);
@@ -35,6 +35,14 @@ export async function createPost(data: TServerPostSchema, userId: string) {
         images: {
           createMany: {
             data: processedImage,
+          },
+        },
+        notifications: {
+          createMany: {
+            data: [
+              { type: "LIKE_POST", userId },
+              { type: "COMMENT", userId },
+            ],
           },
         },
         user: {
@@ -137,11 +145,15 @@ export async function deletePost({
 export async function likePost({
   postId,
   userId,
+  postAuthorId,
+  notificationId,
 }: {
   postId: string;
   userId: string;
+  postAuthorId: string;
+  notificationId: string;
 }) {
-  if (!userId || !postId) {
+  if (!userId || !postId || !postAuthorId) {
     return {
       success: false,
       type: "error",
@@ -159,24 +171,31 @@ export async function likePost({
     });
 
     let likedPost;
-    let type: "like" | "unlike";
+    let type: "like" | "unlike" = "like";
 
-    if (!existingLike) {
-      likedPost = await prisma.postLike.create({
-        data: {
-          postId,
-          userId,
-        },
-      });
-      type = "like";
-    } else {
-      likedPost = await prisma.postLike.delete({
-        where: {
-          id: existingLike.id,
-        },
-      });
-      type = "unlike";
-    }
+    await prisma.$transaction(async (tx) => {
+      if (!existingLike) {
+        type = "like";
+
+        likedPost = await tx.postLike.create({
+          data: { postId, userId },
+        });
+
+        await tx.notificationTrigger.create({
+          data: { notificationId, userId },
+        });
+      } else {
+        type = "unlike";
+
+        likedPost = await tx.postLike.delete({
+          where: { id: existingLike.id },
+        });
+
+        await tx.notificationTrigger.deleteMany({
+          where: { userId, notificationId },
+        });
+      }
+    });
 
     return {
       success: true,

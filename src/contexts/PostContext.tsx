@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 type PostProvider = PostWithRelations & {
   optimisticLike: boolean;
   handleLike: VoidFunction;
+  handleDeletePost: VoidFunction;
 };
 
 const postContext = createContext<PostProvider | undefined>(undefined);
@@ -27,11 +28,15 @@ export function PostProvider({
   children: ReactNode;
   post: PostWithRelations;
 }) {
-  const { postLikes, id: postId } = post;
+  const { postLikes, id: postId, userId: postAuthorId, notifications } = post;
 
   const [isPending, startTransition] = useTransition();
   const { user } = useClientSession();
   const [hasLiked, setHasLiked] = useState(postLikes.length > 0);
+
+  const likeNotificationId = notifications.find(
+    (notification) => notification.type === "LIKE_POST",
+  )?.id as string;
 
   const userId = user?.id as string;
 
@@ -44,7 +49,12 @@ export function PostProvider({
     startTransition(async () => {
       likeOptimistic(!hasLiked);
 
-      const res = await likePost({ postId, userId });
+      const res = await likePost({
+        postId,
+        userId,
+        postAuthorId,
+        notificationId: likeNotificationId,
+      });
 
       if (res.success) {
         if (res.type === "like") {
@@ -58,7 +68,10 @@ export function PostProvider({
       }
     });
   }
-  const value = { ...post, handleLike, optimisticLike };
+
+  async function handleDeletePost() {}
+
+  const value = { ...post, handleLike, optimisticLike, handleDeletePost };
   return <postContext.Provider value={value}>{children}</postContext.Provider>;
 }
 

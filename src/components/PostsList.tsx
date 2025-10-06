@@ -15,6 +15,12 @@ export default async function PostsList() {
       },
       comments: true,
       images: true,
+      notifications: {
+        select: {
+          type: true,
+          id: true,
+        },
+      },
       user: {
         select: {
           name: true,

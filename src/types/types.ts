@@ -50,6 +50,12 @@ export type PostWithRelations = Prisma.PostGetPayload<{
     postLikes: true;
     comments: true;
     images: true;
+    notifications: {
+      select: {
+        type: true;
+        id: true;
+      };
+    };
     user: {
       select: {
         name: true;

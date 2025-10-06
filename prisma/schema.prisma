@@ -28,8 +28,8 @@ model User {
   displayUsername String
   bio             String?
 
-  notifications          Notification[] @relation("UserNotifications")
-  triggeredNotifications Notification[] @relation("TriggeredNotifications")
+  notifications          Notification[]
+  triggeredNotifications NotificationTrigger[]
   posts                  Post[]
   postLikes              PostLike[]
   postComments           Comment[]
@@ -94,12 +94,13 @@ model Verification {
 }
 
 model Post {
-  id        String     @id @default(cuid())
-  userId    String
-  content   String?    @db.Text
-  comments  Comment[]
-  postLikes PostLike[]
-  images    Image[]
+  id            String         @id @default(cuid())
+  userId        String
+  content       String?        @db.Text
+  comments      Comment[]
+  postLikes     PostLike[]
+  images        Image[]
+  notifications Notification[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -108,21 +109,37 @@ model Post {
 }
 
 model Notification {
-  id            String             @id @default(cuid())
-  triggerUserId String
-  content       String
-  userId        String
-  type          NotificationType
-  status        NotificationStatus @default(UNREAD)
+  id       String                @id @default(cuid())
+  userId   String
+  postId   String
+  type     NotificationType
+  status   NotificationStatus    @default(UNREAD)
+  triggers NotificationTrigger[]
 
-  user        User @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
-  triggerUser User @relation("TriggeredNotifications", fields: [triggerUserId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([userId, postId, type])
   @@index([userId])
-  @@index([triggerUserId])
+}
+
+model NotificationTrigger {
+  id             String @id @default(cuid())
+  userId         String
+  notificationId String
+
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, notificationId])
+  @@index([notificationId])
 }
 
 model Comment {
