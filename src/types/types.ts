@@ -71,3 +71,15 @@ export type PostWithRelations = Prisma.PostGetPayload<{
     };
   };
 }>;
+
+export type CommentsWithRelations = Prisma.CommentGetPayload<{
+  include: {
+    user: {
+      select: {
+        displayUsername: true;
+        name: true;
+        image: true;
+      };
+    };
+  };
+}>;

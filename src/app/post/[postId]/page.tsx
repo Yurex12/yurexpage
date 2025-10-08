@@ -21,7 +21,22 @@ export default async function page({
           userId: user.id,
         },
       },
-      comments: true,
+      comments: {
+        select: {
+          id: true,
+          content: true,
+          user: {
+            select: {
+              name: true,
+              displayUsername: true,
+              image: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
       images: true,
       notifications: {
         select: {

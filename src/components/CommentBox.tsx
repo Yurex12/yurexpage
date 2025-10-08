@@ -1,19 +1,31 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
+import { usePost } from "@/contexts/PostContext";
 import useAutoResizeTextarea from "@/hooks/useAutoResizeTextarea";
+import { useClientSession } from "@/hooks/useClientSession";
+import { createComment } from "@/lib/actions/postActions";
 import { mergeRefs } from "@/lib/helpers";
 import { TCommentSchema } from "@/lib/schemas/postSchema";
 import { SendHorizonalIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { forwardRef, useEffect, useImperativeHandle } from "react";
 import { UseFormReturn } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 
 const CommentBox = forwardRef<
   { focus: VoidFunction },
-  { form: UseFormReturn<TCommentSchema> }
->(({ form }, ref) => {
+  { form: UseFormReturn<TCommentSchema>; onUploaded: VoidFunction }
+>(({ form, onUploaded }, ref) => {
   const { textareaRef, handleTextAreaHeight } = useAutoResizeTextarea();
+  const { notifications, id: postId } = usePost();
+
+  const { user } = useClientSession();
+
+  const router = useRouter();
+
+  const userId = user?.id as string;
 
   useImperativeHandle(
     ref,
@@ -27,12 +39,32 @@ const CommentBox = forwardRef<
     textareaRef.current?.focus();
   }, [textareaRef]);
 
+  const notificationId = notifications.find(
+    (notification) => notification.type === "COMMENT",
+  )?.id as string;
+
   const content = form.watch("content");
 
   const isSubmitting = form.formState.isSubmitting;
 
-  function onSubmit(values: TCommentSchema) {
-    console.log(values);
+  async function onSubmit(values: TCommentSchema) {
+    const res = await createComment({
+      content: values.content,
+      postId,
+      userId,
+      notificationId,
+    });
+
+    if (res.success) {
+      onUploaded();
+      form.reset();
+      toast.success(res.message);
+    } else if (!res.success && res.error === "POST_NOT_FOUND") {
+      toast.error(res.message || "This post has been deleted");
+      router.refresh();
+    } else {
+      toast.error(res.message);
+    }
   }
 
   return (
@@ -42,7 +74,7 @@ const CommentBox = forwardRef<
 
         <Form {...form}>
           <form
-            className="cl relative flex-1 flex-row"
+            className="relative flex-1 flex-row"
             onSubmit={form.handleSubmit(onSubmit)}
           >
             <FormField

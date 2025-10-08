@@ -1,71 +1,81 @@
+/* eslint-disable @next/next/no-img-element */
+import { CommentsWithRelations } from "@/types/types";
 import { ThumbsUp } from "lucide-react";
 
-const comments = [
-  {
-    id: 1,
-    name: "Yusuf Ade",
-    avatar: "/c.jpg",
-    text: "This is an amazing post! Thanks for sharing this 💯",
-    liked: false,
-    likeCount: 2,
-    time: "2h ago",
-  },
-  {
-    id: 2,
-    name: "Lola Martins",
-    avatar: "/d.jpg",
-    text: "Thanks for sharing this 💯",
-    liked: true,
-    likeCount: 5,
-    time: "3h ago",
-  },
-  {
-    id: 3,
-    name: "Yusuf Ade",
-    avatar: "/c.jpg",
-    text: "This is an amazing post!",
-    liked: false,
-    likeCount: 2,
-    time: "2h ago",
-  },
-  {
-    id: 4,
-    name: "Lola Martins",
-    avatar: "/d.jpg",
-    text: "Thanks for sharing this 💯 Thanks for sharing this 💯",
-    liked: true,
-    likeCount: 5,
-    time: "3h ago",
-  },
-  {
-    id: 5,
-    name: "Yusuf Ade",
-    avatar: "/c.jpg",
-    text: "This is an amazing post! Thanks for sharing this 💯Thanks for sharing this 💯",
-    liked: false,
-    likeCount: 2,
-    time: "2h ago",
-  },
-  {
-    id: 6,
-    name: "Lola Martins",
-    avatar: "/c.jpg",
-    text: "Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯",
-    liked: true,
-    likeCount: 5,
-    time: "3h ago",
-  },
-];
+// const comments = [
+//   {
+//     id: 1,
+//     name: "Yusuf Ade",
+//     avatar: "/c.jpg",
+//     text: "This is an amazing post! Thanks for sharing this 💯",
+//     liked: false,
+//     likeCount: 2,
+//     time: "2h ago",
+//   },
+//   {
+//     id: 2,
+//     name: "Lola Martins",
+//     avatar: "/d.jpg",
+//     text: "Thanks for sharing this 💯",
+//     liked: true,
+//     likeCount: 5,
+//     time: "3h ago",
+//   },
+//   {
+//     id: 3,
+//     name: "Yusuf Ade",
+//     avatar: "/c.jpg",
+//     text: "This is an amazing post!",
+//     liked: false,
+//     likeCount: 2,
+//     time: "2h ago",
+//   },
+//   {
+//     id: 4,
+//     name: "Lola Martins",
+//     avatar: "/d.jpg",
+//     text: "Thanks for sharing this 💯 Thanks for sharing this 💯",
+//     liked: true,
+//     likeCount: 5,
+//     time: "3h ago",
+//   },
+//   {
+//     id: 5,
+//     name: "Yusuf Ade",
+//     avatar: "/c.jpg",
+//     text: "This is an amazing post! Thanks for sharing this 💯Thanks for sharing this 💯",
+//     liked: false,
+//     likeCount: 2,
+//     time: "2h ago",
+//   },
+//   {
+//     id: 6,
+//     name: "Lola Martins",
+//     avatar: "/c.jpg",
+//     text: "Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯Thanks for sharing this 💯",
+//     liked: true,
+//     likeCount: 5,
+//     time: "3h ago",
+//   },
+// ];
 
-export default function CommentList() {
+export default function CommentList({
+  comments,
+}: {
+  comments: CommentsWithRelations[];
+}) {
+  if (!comments?.length) {
+    return <p className="text-center">No comments.</p>;
+  }
+
   return (
     <div className="space-y-4 px-4 pt-4">
       {comments.map((comment) => (
         <div key={comment.id} className="flex gap-3">
           {/* Avatar */}
           <img
-            src={comment.avatar}
-            alt={comment.name}
+            src={comment.user.image || ""}
+            alt={comment.user.name}
             className="h-10 w-10 rounded-full object-cover"
           />
 
@@ -73,9 +83,9 @@ export default function CommentList() {
           <div className="">
             <div className="rounded-xl bg-gray-100 p-3">
               <p className="text-sm font-semibold text-gray-900">
-                {comment.name}
+                {comment.user.name}
               </p>
-              <p className="mt-0.5 text-sm">{comment.text}</p>
+              <p className="mt-0.5 text-sm">{comment.content}</p>
             </div>
 
             {/* Footer */}
@@ -84,11 +94,12 @@ export default function CommentList() {
                 <button className="flex items-center gap-1 transition hover:text-blue-500">
                   Like
                 </button>
-                <span>{comment.time}</span>
+                {/* <span>{comment.time}</span> */}
               </div>
               <div className="flex items-center gap-x-[1px]">
                 <ThumbsUp className="h-3 w-3" />
-                <span className="text-xs">{comment.likeCount}</span>
+                {/* <span className="text-xs">{comment.likeCount}</span> */}
+                <span className="text-xs">{10}</span>
               </div>
             </div>
           </div>

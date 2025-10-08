@@ -1,19 +1,21 @@
 "use client";
 import { commentSchema, TCommentSchema } from "@/lib/schemas/postSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { useRef, useState } from "react";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import CommentBox from "./CommentBox";
 import CommentDialogHeader from "./CommentDialogHeader";
 import CommentImage from "./CommentImage";
-import CommentList from "./CommentList";
 import ConfirmAction from "./ConfirmAction";
 import EngagementStats from "./EngagementStats";
 import PostHeader from "./PostHeader";
 import PostInteraction from "./PostInteraction";
 import TextExpander from "./TextExpander";
 import { DialogContent } from "./ui/dialog";
-import { zodResolver } from "@hookform/resolvers/zod";
+import CommentsSection from "./CommentsSection";
+import { usePost } from "@/contexts/PostContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function PostCommentDialog({
   onClose,
@@ -21,7 +23,10 @@ export default function PostCommentDialog({
   onClose: VoidFunction;
 }) {
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
   const commentBoxRef = useRef<{ focus: VoidFunction }>(null);
+
+  const { id: postId } = usePost();
 
   const form = useForm<TCommentSchema>({
     resolver: zodResolver(commentSchema),
@@ -55,10 +60,19 @@ export default function PostCommentDialog({
 
   const handleComment = () => commentBoxRef.current?.focus();
 
+  const queryClient = useQueryClient();
+
+  function handleUploaded() {
+    queryClient.invalidateQueries({
+      queryKey: ["comments", postId],
+    });
+  }
+
   return (
     <>
       <DialogContent
         className="flex h-11/12 w-full flex-col gap-y-0 p-0 2xl:max-w-2xl"
+        aria-describedby={undefined}
         showCloseButton={false}
         onInteractOutside={(e) => {
           e.preventDefault();
@@ -88,11 +102,15 @@ export default function PostCommentDialog({
 
             <PostInteraction onClickComment={handleComment} />
 
-            <CommentList />
+            <CommentsSection postId={postId} />
           </div>
         </OverlayScrollbarsComponent>
 
-        <CommentBox ref={commentBoxRef} form={form} />
+        <CommentBox
+          ref={commentBoxRef}
+          form={form}
+          onUploaded={handleUploaded}
+        />
       </DialogContent>
 
       <ConfirmAction

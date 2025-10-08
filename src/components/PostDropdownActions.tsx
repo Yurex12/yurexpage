@@ -24,6 +24,7 @@ export default function PostDropdownActions() {
 
   async function handleDeletePost() {
     if (postsContext) {
+      // closeDialog()
       postsContext.handleDeletePost(postId);
     } else {
       const res = await deletePost({ postId, userId });

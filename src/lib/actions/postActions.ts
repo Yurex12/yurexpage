@@ -1,9 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import z from "zod";
 import { prisma } from "../prisma";
 import { serverPostSchema, TServerPostSchema } from "../schemas/postSchema";
-import { revalidatePath } from "next/cache";
 
 export async function createPost(data: TServerPostSchema, userId: string) {
   const validateFields = serverPostSchema.safeParse(data);
@@ -52,8 +52,6 @@ export async function createPost(data: TServerPostSchema, userId: string) {
         },
       },
     });
-
-    // revalidatePath("/");
 
     return {
       success: true,
@@ -141,7 +139,6 @@ export async function deletePost({
 }
 
 // Like post
-
 export async function likePost({
   postId,
   userId,
@@ -228,6 +225,86 @@ export async function likePost({
       type: "error",
       error,
       message: "Could not like/unlike post",
+    };
+  }
+}
+
+export async function createComment({
+  content,
+  postId,
+  userId,
+  notificationId,
+}: {
+  content: string;
+  postId: string;
+  userId: string;
+  notificationId: string;
+}) {
+  if (!userId || !postId || !content || !notificationId) {
+    return {
+      success: false,
+      data: null,
+      error: "Invalid request, pass required fields.",
+      message: "could not comment",
+    };
+  }
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      return {
+        success: false,
+        data: null,
+        error: "POST_NOT_FOUND",
+        message: "This post is no longer available",
+      };
+    }
+
+    let newComment;
+
+    await prisma.$transaction(async (tx) => {
+      newComment = await tx.comment.create({
+        data: {
+          postId: post.id,
+          content,
+          userId,
+        },
+      });
+
+      const existingNotification = await tx.notificationTrigger.findUnique({
+        where: {
+          userId_notificationId: { userId, notificationId },
+        },
+      });
+
+      if (!existingNotification) {
+        await tx.notificationTrigger.create({
+          data: { notificationId, userId },
+        });
+      }
+    });
+
+    // revalidatePath(`/posts/${postId}`);
+
+    return {
+      success: true,
+      data: newComment,
+      error: null,
+      message: "comment was successful",
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      data: null,
+      error,
+      message: "Could not comment on post",
     };
   }
 }

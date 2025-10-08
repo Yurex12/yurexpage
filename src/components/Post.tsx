@@ -45,7 +45,9 @@ export default function Post({ post }: { post: PostWithRelations }) {
       </div>
 
       <Dialog open={openCommentDialog} onOpenChange={setOpenCommentDialog}>
-        <PostCommentDialog onClose={() => setOpenCommentDialog(false)} />
+        {openCommentDialog && (
+          <PostCommentDialog onClose={() => setOpenCommentDialog(false)} />
+        )}
       </Dialog>
     </PostProvider>
   );
