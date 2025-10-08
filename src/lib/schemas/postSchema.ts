@@ -27,14 +27,10 @@ export const postSchema = z
         { message: "Only JPEG, PNG, and WebP images are allowed" },
       ),
   })
-  .refine(
-    (data) =>
-      Boolean(data.content.trim().length) || Boolean(data.images.length),
-    {
-      error: "Please provide either content or at least one image",
-      // path: ["content"],
-    },
-  );
+  .refine((data) => data.content.trim().length > 0 || data.images.length > 0, {
+    error: "Please provide either content or at least one image",
+    // path: ["content"],
+  });
 
 export const serverPostSchema = z
   .object({
@@ -61,5 +57,16 @@ export const serverPostSchema = z
     },
   );
 
+export const commentSchema = z
+  .object({
+    content: z.string().max(500, "Content should be less than 500 chars"),
+  })
+  .refine((data) => data.content.length > 0, {
+    error: "comment cannot be empty",
+    // path: ['content']
+  });
+
 export type TPostSchema = z.infer<typeof postSchema>;
 export type TServerPostSchema = z.infer<typeof serverPostSchema>;
+
+export type TCommentSchema = z.infer<typeof commentSchema>;

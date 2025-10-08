@@ -8,7 +8,7 @@ export default function LikePostBtn() {
   return (
     <button
       onClick={handleLike}
-      className={`text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100`}
+      className="text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100"
     >
       <ThumbsUp
         className={`h-5 w-5 ${optimisticLike ? "fill-blue-500" : ""}`}

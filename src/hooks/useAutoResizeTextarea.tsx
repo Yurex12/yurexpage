@@ -1,26 +1,26 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
-export default function useAutoResizeTextarea(maxHeight: number) {
+export default function useAutoResizeTextarea(maxHeight: number = 200) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const handleInput = () => {
+  const handleTextAreaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
 
       if (textarea.scrollHeight > maxHeight) {
         textarea.style.height = `${maxHeight}px`;
-        textarea.style.overflowY = 'scroll';
+        textarea.style.overflowY = "scroll";
       } else {
         textarea.style.height = `${textarea.scrollHeight}px`;
-        textarea.style.overflowY = 'hidden';
+        textarea.style.overflowY = "hidden";
       }
     }
   };
 
   return {
     textareaRef,
-    handleInput,
+    handleTextAreaHeight,
     height: textareaRef.current?.scrollHeight,
   };
 }

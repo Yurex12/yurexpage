@@ -13,6 +13,7 @@ import EngagementStats from "./EngagementStats";
 import PostHeader from "./PostHeader";
 import PostInteractions from "./PostInteractions";
 import TextExpander from "./TextExpander";
+import PostInteraction from "./PostInteraction";
 
 type PostCommentSectionProps = {
   openConfirmationDialog: boolean;
@@ -29,8 +30,6 @@ export default function PostCommentSection({
   handleLeavePost,
   handleConfirmationDialog,
 }: PostCommentSectionProps) {
-  const slides: { src: string }[] = [{ src: "/yusuf.jpg" }, { src: "/c.jpg" }];
-
   const commentBoxRef = useRef<HTMLTextAreaElement | null>(null);
   const handleComment = () => commentBoxRef.current?.focus();
 
@@ -47,15 +46,15 @@ export default function PostCommentSection({
         className="my-2 flex-1 overflow-scroll"
       >
         <PostHeader />
-        <TextExpander
-          className="mt-2 px-4"
-          text="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit.Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat eveniet vel labore vitae veniam delectus, officia eaque ut, architecto quas dolores. Incidunt nulla, suscipit eos aliquam maiores dolores pariatur odit."
-        />
+        <TextExpander className="mt-2 px-4" />
         {/* image */}
-        <CommentImage images={slides} />
+        <CommentImage />
         <div className="mt-2 space-y-2">
           <EngagementStats />
-          <PostInteractions className="border-y border-gray-400 py-1">
+          {/* Post actions */}
+          <PostInteraction onClickComment={handleComment} />
+          {/* <div className="border-y border-gray-400 py-1">
+            
             <button
               className="text-muted-foreground flex w-1/2 items-center justify-center space-x-2 rounded-md py-2 hover:bg-gray-100"
               onClick={handleComment}
@@ -63,7 +62,7 @@ export default function PostCommentSection({
               <MessageCircle className="size-5" />
               <span className="text-sm">Comment</span>
             </button>
-          </PostInteractions>
+          </div> */}
           <CommentList />
         </div>
       </OverlayScrollbarsComponent>

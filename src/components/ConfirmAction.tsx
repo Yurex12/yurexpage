@@ -4,18 +4,18 @@ import { X } from "lucide-react";
 type ConfirmActionProps = {
   open: boolean;
   name: string;
-  handleLeavePost: () => void;
-  handleConfirmationDialog: () => void;
+  onLeave: () => void;
+  onConfirmation: () => void;
 };
 
 export default function ConfirmAction({
   name,
   open,
-  handleLeavePost,
-  handleConfirmationDialog,
+  onLeave,
+  onConfirmation,
 }: ConfirmActionProps) {
   return (
-    <Dialog open={open} onOpenChange={handleConfirmationDialog}>
+    <Dialog open={open} onOpenChange={onConfirmation}>
       <DialogOverlay showOverlay className="bg-white/70" />
       <DialogContent
         className="mx-auto w-full rounded-2xl border-none bg-white px-0 py-4 text-gray-800 shadow-2xl outline-none sm:max-w-md"
@@ -28,7 +28,7 @@ export default function ConfirmAction({
           </h2>
 
           <button
-            onClick={handleConfirmationDialog}
+            onClick={onConfirmation}
             className="justify-end text-gray-500 transition hover:text-gray-800"
           >
             <X size={20} />
@@ -43,13 +43,13 @@ export default function ConfirmAction({
 
         <div className="flex items-center justify-end space-x-4 px-2">
           <button
-            onClick={handleConfirmationDialog}
+            onClick={onConfirmation}
             className="rounded-lg border px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-50"
           >
             Stay on {name}
           </button>
           <button
-            onClick={handleLeavePost}
+            onClick={onLeave}
             className="bg-primary rounded-lg px-4 py-2 text-sm text-white transition hover:opacity-90"
           >
             Leave {name}

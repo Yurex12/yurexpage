@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
@@ -8,19 +9,18 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { usePost } from "@/contexts/PostContext";
 import { useEffect, useRef, useState } from "react";
 
-export default function CommentImage({
-  images,
-}: {
-  images: { src: string }[];
-}) {
+export default function CommentImage() {
   const [open, setOpen] = useState(false);
   const [startIndex, setStartIndex] = useState(1);
   const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     ref.current?.scrollIntoView({ block: "start" });
   }, []);
+
+  const { images } = usePost();
 
   const handleOpen = () => setOpen((open) => !open);
 
@@ -39,12 +39,12 @@ export default function CommentImage({
       >
         {images.map((image, index) => (
           <img
-            src={image.src}
+            src={image.url}
             alt=""
             className={`w-full cursor-pointer rounded-md object-cover ${
               images.length > 1 ? "h-80" : "h-auto"
             }`}
-            key={image.src}
+            key={image.fileId}
             onClick={() => handleOpenImage(index)}
           />
         ))}
@@ -69,7 +69,7 @@ export default function CommentImage({
                     <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/60 to-black/80" />
 
                     <img
-                      src={image.src}
+                      src={image.url}
                       alt={`Image ${index + 1}`}
                       className="relative z-10 h-full w-auto object-contain drop-shadow-2xl transition-all duration-300"
                     />

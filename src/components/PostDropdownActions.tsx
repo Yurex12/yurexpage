@@ -9,10 +9,32 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { usePost } from "@/contexts/PostContext";
+import { deletePost } from "@/lib/actions/postActions";
+import { useClientSession } from "@/hooks/useClientSession";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function PostDropdownActions() {
   const { id: postId } = usePost();
-  const { handleDeletePost } = usePosts();
+  const postsContext = usePosts();
+  const router = useRouter();
+  const { user } = useClientSession();
+
+  const userId = user?.id as string;
+
+  async function handleDeletePost() {
+    if (postsContext) {
+      postsContext.handleDeletePost(postId);
+    } else {
+      const res = await deletePost({ postId, userId });
+      if (res.success) {
+        router.back();
+        toast.success(res.message);
+      } else {
+        toast.error(res.message || "Post could not be deleted");
+      }
+    }
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -38,7 +60,7 @@ export default function PostDropdownActions() {
 
         <DropdownMenuItem
           className="flex cursor-pointer items-center gap-3 rounded-md border-0 px-3 py-2 text-sm text-red-600 outline-0 transition hover:bg-red-50"
-          onClick={() => handleDeletePost(postId)}
+          onClick={handleDeletePost}
         >
           <Trash className="h-4 w-4 text-red-500" />
           <span>Delete post</span>

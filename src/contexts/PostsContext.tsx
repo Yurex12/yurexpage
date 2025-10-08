@@ -1,8 +1,6 @@
 "use client";
-import { useClientSession } from "@/hooks/useClientSession";
 import { deletePost } from "@/lib/actions/postActions";
 import { PostWithRelations } from "@/types/types";
-import { useRouter } from "next/navigation";
 import {
   createContext,
   ReactNode,
@@ -12,21 +10,26 @@ import {
 } from "react";
 import toast from "react-hot-toast";
 
-type PostProvider = {
+type PostContext = {
   posts: PostWithRelations[];
   handleDeletePost: (value: string) => void;
 };
 
-const PostsContext = createContext<PostProvider | null>(null);
+type PostProvider = {
+  posts: PostWithRelations[];
+  children: ReactNode;
+  currentUserId: string;
+};
+
+const PostsContext = createContext<PostContext | null>(null);
 
 export function PostsProvider({
   children,
   posts,
-}: {
-  posts: PostWithRelations[];
-  children: ReactNode;
-}) {
+  currentUserId,
+}: PostProvider) {
   const [isPending, startTransition] = useTransition();
+
   const [optimisticPosts, deleteOptimistic] = useOptimistic(
     posts,
     (curPosts, postToDeleteId: string) => {
@@ -34,21 +37,20 @@ export function PostsProvider({
     },
   );
 
-  const router = useRouter();
-
-  const { user } = useClientSession();
-  const userId = user?.id as string;
-
   function handleDeletePost(postToDeleteId: string) {
     startTransition(async () => {
       deleteOptimistic(postToDeleteId);
-      const res = await deletePost({ postId: postToDeleteId, userId });
+      const res = await deletePost({
+        postId: postToDeleteId,
+        userId: currentUserId,
+      });
       if (res.success) {
         toast.success("Post deleted succesfully.");
-        // router.refresh();
       } else {
         toast.error("Post could not be deleted, try again");
       }
+
+      console.log(res);
     });
   }
 
@@ -60,7 +62,8 @@ export function PostsProvider({
 
 export function usePosts() {
   const context = useContext(PostsContext);
-  if (!context) throw new Error("Posts context was used outside post provider");
+  if (!context) return null;
+  //  throw new Error("Posts context was used outside post provider");
 
   return context;
 }

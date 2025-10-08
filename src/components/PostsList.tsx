@@ -43,7 +43,7 @@ export default async function PostsList() {
   if (!posts.length) return <p>No post found</p>;
 
   return (
-    <PostsProvider posts={posts}>
+    <PostsProvider posts={posts} currentUserId={user.id}>
       <Posts />
     </PostsProvider>
   );
