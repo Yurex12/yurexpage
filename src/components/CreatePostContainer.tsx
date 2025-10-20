@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ConfirmAction from "./ConfirmAction";
 import CreatePostForm from "./CreatePostForm";
-import CreatePostHeader from "./CreatePostHeader";
 import { DialogContent, DialogTitle } from "./ui/dialog";
+import PostFormHeader from "./PostFormHeader";
 
 export default function CreatePostContainer({
   onClose,
@@ -46,24 +46,26 @@ export default function CreatePostContainer({
   }
 
   return (
-    <>
-      <DialogContent
-        className="flex max-h-10/12 flex-col p-4 outline-0"
-        showCloseButton={false}
-        aria-describedby={undefined}
-        onInteractOutside={(e) => {
-          e.preventDefault();
-          handleCloseDialog();
-        }}
-        onEscapeKeyDown={(e) => {
-          e.preventDefault();
-          handleCloseDialog();
-        }}
-      >
-        <DialogTitle className="sr-only">Post Modal</DialogTitle>
-        <CreatePostHeader disabled={isSubmitting} />
-        <CreatePostForm form={form} onPostUploadSuccess={onClose} />
-      </DialogContent>
+    <DialogContent
+      className="flex max-h-10/12 flex-col p-4 outline-0"
+      showCloseButton={false}
+      aria-describedby={undefined}
+      onInteractOutside={(e) => {
+        e.preventDefault();
+        handleCloseDialog();
+      }}
+      onEscapeKeyDown={(e) => {
+        e.preventDefault();
+        handleCloseDialog();
+      }}
+    >
+      <DialogTitle className="sr-only">Post Modal</DialogTitle>
+      <PostFormHeader
+        disabled={isSubmitting}
+        onClose={handleCloseDialog}
+        text="Create Post"
+      />
+      <CreatePostForm form={form} onPostUploadSuccess={onClose} />
 
       <ConfirmAction
         open={openConfirmationDialog}
@@ -71,6 +73,6 @@ export default function CreatePostContainer({
         onLeave={handleConfirmedLeave}
         onConfirmation={() => setOpenConfirmationDialog(false)}
       />
-    </>
+    </DialogContent>
   );
 }

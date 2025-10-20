@@ -70,6 +70,82 @@ export async function createPost(data: TServerPostSchema, userId: string) {
     };
   }
 }
+export async function editPost(
+  data: TServerPostSchema,
+  imagesToDeletedIds: string[],
+  userId: string,
+  postId: string,
+) {
+  const validateFields = serverPostSchema.safeParse(data);
+
+  if (!validateFields.success) {
+    return {
+      success: false,
+      message: "Please enter correct details",
+      error: z.flattenError(validateFields.error),
+      data: null,
+    };
+  }
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: postId,
+    },
+  });
+
+  if (!post) {
+    return {
+      success: false,
+      message: "Post does not exist",
+      error: "NOT_FOUND",
+      data: null,
+    };
+  }
+
+  const { content, images } = validateFields.data;
+
+  const processedImage = images.length
+    ? images.map((image) => ({
+        userId,
+        url: image.url,
+        fileId: image.fileId,
+        name: image.name,
+      }))
+    : [];
+
+  try {
+    const newPost = await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        content,
+        images: {
+          deleteMany: { fileId: { in: imagesToDeletedIds } },
+          createMany: {
+            data: processedImage,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      data: newPost,
+      error: null,
+      message: "Post Edited successfully.",
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      success: false,
+      data: null,
+      error,
+      message: "Post could not be edited.",
+    };
+  }
+}
 
 export async function deletePost({
   userId,

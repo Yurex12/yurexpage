@@ -12,10 +12,11 @@ import EngagementStats from "./EngagementStats";
 import PostHeader from "./PostHeader";
 import PostInteraction from "./PostInteraction";
 import TextExpander from "./TextExpander";
-import { DialogContent } from "./ui/dialog";
+import { Dialog, DialogContent } from "./ui/dialog";
 import CommentsSection from "./CommentsSection";
 import { usePost } from "@/contexts/PostContext";
 import { useQueryClient } from "@tanstack/react-query";
+import UpdatePostDialog from "./UpdatePostDialog";
 
 export default function PostCommentDialog({
   onClose,
@@ -23,6 +24,7 @@ export default function PostCommentDialog({
   onClose: VoidFunction;
 }) {
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+  const [openUpdatePostDialog, setOpenUpdatePostDialog] = useState(false);
 
   const commentBoxRef = useRef<{ focus: VoidFunction }>(null);
 
@@ -51,7 +53,6 @@ export default function PostCommentDialog({
     onClose();
   }
 
-  // ✅ Confirmed leave
   function handleConfirmedLeave() {
     setOpenConfirmationDialog(false);
     form.reset();
@@ -69,49 +70,54 @@ export default function PostCommentDialog({
   }
 
   return (
-    <>
-      <DialogContent
-        className="flex h-11/12 w-full flex-col gap-y-0 p-0 2xl:max-w-2xl"
-        aria-describedby={undefined}
-        showCloseButton={false}
-        onInteractOutside={(e) => {
-          e.preventDefault();
-          handleDialogClose();
+    <DialogContent
+      className="flex h-11/12 w-full flex-col gap-y-0 p-0 2xl:max-w-2xl"
+      aria-describedby={undefined}
+      showCloseButton={false}
+      onInteractOutside={(e) => {
+        e.preventDefault();
+        handleDialogClose();
+      }}
+      onEscapeKeyDown={(e) => {
+        e.preventDefault();
+        handleDialogClose();
+      }}
+    >
+      <CommentDialogHeader />
+      <OverlayScrollbarsComponent
+        options={{
+          scrollbars: {
+            autoHide: "leave",
+            autoHideDelay: 300,
+          },
         }}
-        onEscapeKeyDown={(e) => {
-          e.preventDefault();
-          handleDialogClose();
-        }}
+        className="my-2 flex-1 overflow-scroll"
       >
-        <CommentDialogHeader />
-        <OverlayScrollbarsComponent
-          options={{
-            scrollbars: {
-              autoHide: "leave",
-              autoHideDelay: 300,
-            },
-          }}
-          className="my-2 flex-1 overflow-scroll"
-        >
-          <PostHeader />
-          <TextExpander className="mt-2 px-4" />
-          {/* image */}
-          <CommentImage />
-          <div className="mt-2 space-y-2">
-            <EngagementStats />
+        <PostHeader onUpdatePost={() => setOpenUpdatePostDialog(true)} />
+        <TextExpander className="mt-2 px-4" />
+        {/* image */}
+        <CommentImage />
+        <div className="mt-2 space-y-2">
+          <EngagementStats />
 
-            <PostInteraction onClickComment={handleComment} />
+          <PostInteraction onClickComment={handleComment} />
 
-            <CommentsSection postId={postId} />
-          </div>
-        </OverlayScrollbarsComponent>
+          <CommentsSection postId={postId} />
+        </div>
+      </OverlayScrollbarsComponent>
 
-        <CommentBox
-          ref={commentBoxRef}
-          form={form}
-          onUploaded={handleUploaded}
-        />
-      </DialogContent>
+      <CommentBox ref={commentBoxRef} form={form} onUploaded={handleUploaded} />
+
+      {/* Edit post */}
+      <Dialog
+        open={openUpdatePostDialog}
+        onOpenChange={setOpenUpdatePostDialog}
+        key="updatePost"
+      >
+        {openUpdatePostDialog && (
+          <UpdatePostDialog onClose={() => setOpenUpdatePostDialog(false)} />
+        )}
+      </Dialog>
 
       <ConfirmAction
         name="comment"
@@ -119,6 +125,6 @@ export default function PostCommentDialog({
         onLeave={handleConfirmedLeave}
         onConfirmation={() => setOpenConfirmationDialog(false)}
       />
-    </>
+    </DialogContent>
   );
 }

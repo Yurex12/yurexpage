@@ -32,6 +32,52 @@ export const postSchema = z
     // path: ["content"],
   });
 
+export const postEditSchema = z
+  .object({
+    content: z
+      .string()
+      .trim()
+      .max(1000, "Content should not be more than 1000 characters"),
+
+    images: z
+      .array(
+        z.union([
+          z.instanceof(File),
+          z.object({
+            fileId: z.string(),
+            url: z.string(),
+            name: z.string(),
+          }),
+        ]),
+      )
+      .max(2, "Maximum 2 images are allowed")
+      .refine(
+        (images) =>
+          images.every((img) => {
+            if (img instanceof File) {
+              return img.size <= MAX_FILE_SIZE;
+            }
+            return true; // existing images are already validated
+          }),
+        {
+          message: "Each file should be less than 5MB",
+        },
+      )
+      .refine(
+        (images) =>
+          images.every((img) => {
+            if (img instanceof File) {
+              return ACCEPTED_IMAGE_TYPES.includes(img.type);
+            }
+            return true; // existing images are already validated
+          }),
+        { message: "Only JPEG, PNG, and WebP images are allowed" },
+      ),
+  })
+  .refine((data) => data.content.trim().length > 0 || data.images.length > 0, {
+    error: "Please provide either content or at least one image",
+  });
+
 export const serverPostSchema = z
   .object({
     content: z
@@ -68,5 +114,6 @@ export const commentSchema = z
 
 export type TPostSchema = z.infer<typeof postSchema>;
 export type TServerPostSchema = z.infer<typeof serverPostSchema>;
+export type PostEditSchema = z.infer<typeof postEditSchema>;
 
 export type TCommentSchema = z.infer<typeof commentSchema>;

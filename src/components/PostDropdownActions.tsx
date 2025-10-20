@@ -13,18 +13,29 @@ import { deletePost } from "@/lib/actions/postActions";
 import { useClientSession } from "@/hooks/useClientSession";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
-export default function PostDropdownActions() {
+export default function PostDropdownActions({
+  onUpdatePost,
+  onClose,
+}: {
+  onUpdatePost: VoidFunction;
+  onClose?: VoidFunction;
+}) {
   const { id: postId } = usePost();
   const postsContext = usePosts();
   const router = useRouter();
   const { user } = useClientSession();
+  const [openDropdown, setOpenDropdown] = useState(false);
 
   const userId = user?.id as string;
 
+  const closeDropdown = () => setOpenDropdown(false);
+
   async function handleDeletePost() {
+    closeDropdown();
+    onClose?.();
     if (postsContext) {
-      // closeDialog()
       postsContext.handleDeletePost(postId);
     } else {
       const res = await deletePost({ postId, userId });
@@ -36,8 +47,9 @@ export default function PostDropdownActions() {
       }
     }
   }
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
       <DropdownMenuTrigger asChild>
         <button className="rounded-full border-0 bg-white p-2 outline-0 transition-colors hover:bg-gray-100">
           <Ellipsis className="h-5 w-5 text-gray-600" />
@@ -54,7 +66,13 @@ export default function PostDropdownActions() {
           <span>Copy link</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="flex cursor-pointer items-center gap-3 rounded-md border-0 px-3 py-2 text-sm text-gray-700 outline-0 transition hover:bg-gray-100">
+        <DropdownMenuItem
+          className="flex cursor-pointer items-center gap-3 rounded-md border-0 px-3 py-2 text-sm text-gray-700 outline-0 transition hover:bg-gray-100"
+          onClick={() => {
+            closeDropdown();
+            onUpdatePost();
+          }}
+        >
           <Edit className="h-4 w-4 text-gray-500" />
           <span>Edit post</span>
         </DropdownMenuItem>

@@ -34,7 +34,7 @@ export function Header() {
                 showNotification ? "text-blue-500" : ""
               }`}
             />
-            <UserAvatar />
+            {/* <UserAvatar /> */}
             <LogoutButton />
             <MobileNavbar />
           </div>
@@ -44,7 +44,7 @@ export function Header() {
       <Dialog open={showNotification} onOpenChange={handleShowNotification}>
         <DialogContent
           showCloseButton={false}
-          showOverlay={false}
+          // showOverlay={false}
           className="top-[9%] right-[4%] left-auto h-[90%] w-md translate-x-[-0] translate-y-[-0] border-0 p-0 shadow-2xl"
         >
           <Notifications />
